@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | GIIS Robotics Club</title>
+  <link rel="icon" type="image/x-icon" href="resources/favicon.ico">
+  <style>
+    
+        @font-face {
+            font-family: 'crest';
+            src: url('/crst.otf') format('opentype');
+        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    color: #ffffff;
+    width: 100%;
+    max-height: 100vh; 
+    background-color: #111111;
+    font-family: "crest";
+    color: #ffffff;
+    display: flex;
+    background-image: url('logo/background.png');
+
+}
+.h1 { font-size: 10vh; font-family: 'crest', sans-serif; }
+.h2 { font-size: 7vh; font-family: 'crest', sans-serif; }
+.h3 { font-size: 5vh; font-family: 'crest', sans-serif; }
+.h4 { font-size: 3vh; font-family: 'crest', sans-serif; }
+.h5 { font-size: 1vh; font-family: 'crest', sans-serif; }
+.h6 { font-size: 1vh; font-family: 'crest', sans-serif; }
+
+    
+    .nav{
+        min-height:100vh ;
+        width: 25%;
+        background: linear-gradient(180deg, rgba(20, 33, 61, 0.7) 51%, rgba(30, 30, 47, 0.7) 100%);
+        padding: 10px;
+        display: flex;
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: center;
+    }
+    .imgi{
+        margin-bottom: 10px;
+    }
+    hr{
+        width: 100%;
+        border: 0;
+        height: 1px;
+        background-color: aliceblue;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+    .btn{
+        width:100%;
+        height: 6vh;
+        cursor: pointer;
+        background: #1E201F;
+        color: #ffffff;
+        font-family: 'crest';
+        text-align: left;
+        padding: 8px 10px;
+        font-size: 2.6vh;
+        border-radius: 12px;
+        border: 0;
+        background: linear-gradient(130deg, rgba(30, 32, 31, 1) 56%,#270d40d7 100%) padding-box, linear-gradient(130deg, #7f7f7f, #282a29) border-box;
+        border: 2px solid transparent;
+        margin-bottom: 8px;
+        transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease, border-color 0.2s ease;
+    }
+    .btn:hover{
+        box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+        transform: translateX(2px);
+        border-color: #9aa3a0;
+    }
+    .btn:active{
+        transform: translateX(0);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.18) inset;
+    }
+    .btn:focus-visible{
+        outline: 2px solid #6c63ff;
+        outline-offset: 2px;
+    }
+    .btna{
+        width:100%;
+        height: 6vh;
+        cursor: pointer;
+        background: #1E201F;
+        color: #ffffff;
+        font-family: 'crest';
+        text-align: left;
+        padding: 8px 10px;
+        font-size: 2.6vh;
+        border-radius: 12px;
+        border: 0;
+        background: linear-gradient(180deg,rgba(82, 108, 218, 1) 0%, rgba(44, 75, 205, 1) 24%, rgba(82, 108, 218, 1) 71%, rgba(82, 108, 218, 1) 100%) padding-box, linear-gradient(to right, #2c4bcd, #2c4bcd) border-box;
+        border: 2px solid transparent;
+        margin-bottom: 8px;
+        transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.12s ease, border-color 0.2s ease;
+    }
+    .btna:hover{
+        background: linear-gradient(180deg,rgba(98, 122, 230, 1) 0%, rgba(54, 85, 215, 1) 24%, rgba(98, 122, 230, 1) 71%, rgba(98, 122, 230, 1) 100%) padding-box, linear-gradient(to right, #3a58e0, #3a58e0) border-box;
+        box-shadow: 0 10px 20px rgba(66, 84, 214, 0.35);
+        transform: translateX(2px);
+    }
+    .btna:active{
+        transform: translateX(0);
+        box-shadow: 0 4px 8px rgba(66, 84, 214, 0.25) inset;
+    }
+    .btna:focus-visible{
+        outline: 2px solid #6c63ff;
+        outline-offset: 2px;
+    }
+    .labels{
+        width: 100%;
+        text-align: left;
+        font-size: 2vh;
+        color:#bfbfbf;
+        margin-bottom: 5px;
+    }
+    .hamburger {
+        display: none;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background: rgba(20, 33, 61, 0.9);
+        border: none;
+        color: white;
+        font-size: 24px;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        z-index: 1001;
+    }
+
+    .hamburger:hover {
+        background: rgba(108, 99, 255, 0.8);
+        transform: scale(1.05);
+    }
+
+    .hamburger:active {
+        transform: scale(0.95);
+    }
+
+    .mobile-nav {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(20, 33, 61, 0.96) 45%, rgba(30, 30, 47, 0.96) 100%);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .mobile-nav.active {
+        display: flex;
+    }
+
+    .mobile-nav-inner {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+        padding: 80px 32px 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .mobile-nav-logo {
+        width: clamp(140px, 45vw, 220px);
+    }
+
+    .mobile-nav-divider {
+        width: 100%;
+        height: 1px;
+        background: rgba(255,255,255,0.3);
+        border: 0;
+        border-radius: 999px;
+    }
+
+    .mobile-nav-label {
+        align-self: flex-start;
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #bfbfbf;
+        margin-top: 4px;
+    }
+
+    .mobile-nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .mobile-nav-link {
+        display: block;
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: 2px solid transparent;
+        background: linear-gradient(130deg, rgba(30,32,31,0.95) 56%, rgba(39,13,64,0.9) 100%) padding-box, linear-gradient(130deg, #7f7f7f, #282a29) border-box;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: clamp(1rem, 2.6vw, 1.3rem);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+        transition: transform 0.18s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .mobile-nav-link:hover,
+    .mobile-nav-link:focus-visible {
+        transform: translateX(4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+        border-color: rgba(154,163,160,0.9);
+        outline: none;
+    }
+
+    .mobile-nav-link:active {
+        transform: translateX(1px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.28) inset;
+    }
+
+    .mobile-nav-link.active {
+        background: linear-gradient(180deg, rgba(82,108,218,1) 0%, rgba(44,75,205,1) 24%, rgba(82,108,218,1) 71%, rgba(82,108,218,1) 100%) padding-box, linear-gradient(to right, #2c4bcd, #2c4bcd) border-box;
+        box-shadow: 0 14px 28px rgba(66,84,214,0.35);
+    }
+
+    .main{
+        height: 100vh;
+        width: 80%;
+        padding:18px 26px 70px 26px;
+        overflow-y: auto;
+    }
+    .subtext{
+        font-size: 3vh;
+    }
+
+    .dashboard-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 26px;
+        margin-top: 32px;
+    }
+
+    .card {
+        flex: 1 1 360px;
+        min-height: 300px;
+        background: linear-gradient(135deg, rgba(35,35,55,0.75), rgba(25,18,40,0.75));
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 22px;
+        padding: 26px 28px 32px 28px;
+        position: relative;
+        box-shadow: 0 18px 40px -10px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.4);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 85% 15%, rgba(108,99,255,0.28), transparent 60%);
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .card > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .card h2 {
+        margin: 0;
+        font-size: clamp(1.8rem, 3vw, 2.3rem);
+        letter-spacing: 0.6px;
+    }
+
+    .todo-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .todo-input {
+        flex: 1 1 240px;
+        min-width: 200px;
+        padding: 14px 16px;
+        font-size: 1.9vh;
+        font-family: 'crest';
+        border-radius: 14px;
+        border: 2px solid rgba(150,150,170,0.25);
+        background: rgba(255,255,255,0.08);
+        color: #fff;
+        outline: none;
+        transition: border-color .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+    .todo-input:focus {
+        border-color: #6c63ff;
+        box-shadow: 0 0 0 4px rgba(108,99,255,0.25);
+        background: rgba(255,255,255,0.12);
+    }
+
+    .todo-add-btn {
+        padding: 14px 26px;
+        font-size: 1.9vh;
+        font-family: 'crest';
+        border-radius: 999px;
+        border: 0;
+        cursor: pointer;
+        background: linear-gradient(135deg,#6c63ff,#4a47a3);
+        color: #fff;
+        letter-spacing: 0.8px;
+        box-shadow: 0 10px 24px -6px rgba(108,99,255,0.55);
+        transition: background .25s ease, transform .18s ease, box-shadow .25s ease;
+    }
+
+    .todo-add-btn:hover {
+        background: linear-gradient(135deg,#5a52d5,#3e3b8a);
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px -10px rgba(108,99,255,0.6);
+    }
+
+    .todo-add-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 8px 18px -4px rgba(108,99,255,0.5);
+    }
+
+    .todo-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .todo-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 16px;
+        border-radius: 14px;
+        background: rgba(0,0,0,0.18);
+        border: 1px solid rgba(255,255,255,0.08);
+        transition: transform .18s ease, box-shadow .25s ease;
+    }
+
+    .todo-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 18px -8px rgba(0,0,0,0.35);
+    }
+
+    .todo-item.done .todo-text {
+        text-decoration: line-through;
+        opacity: 0.55;
+    }
+
+    .todo-text {
+        flex: 1;
+        font-size: 1.9vh;
+        letter-spacing: 0.4px;
+    }
+
+    .todo-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .todo-btn {
+        border: 0;
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-size: 1.5vh;
+        font-family: 'crest';
+        cursor: pointer;
+        color: #fff;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        transition: background .2s ease, transform .15s ease;
+    }
+
+    .todo-btn:hover {
+        background: rgba(108,99,255,0.35);
+        transform: translateY(-1px);
+    }
+
+    .todo-btn.delete {
+        background: rgba(244,67,54,0.15);
+        border-color: rgba(244,67,54,0.28);
+        color: #ff7961;
+    }
+
+    .todo-btn.delete:hover {
+        background: rgba(244,67,54,0.28);
+    }
+
+    .todo-empty {
+        font-size: 1.7vh;
+        color: #bfbfe0;
+        text-align: center;
+        margin-top: 12px;
+    }
+
+    .quick-links-grid {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+    }
+
+    .quick-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 16px 18px;
+        border-radius: 16px;
+        text-decoration: none;
+        color: #ffffff;
+        background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+        border: 1px solid rgba(255,255,255,0.16);
+        transition: transform .18s ease, box-shadow .25s ease, border-color .2s ease;
+        text-align: center;
+        font-size: 1.9vh;
+    }
+
+    .quick-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 26px -12px rgba(0,0,0,0.45);
+        border-color: rgba(108,99,255,0.5);
+    }
+
+    .quick-link:active {
+        transform: translateY(-1px);
+    }
+
+    .quick-links-note {
+        font-size: 1.6vh;
+        color: #bfbfe0;
+        opacity: 0.85;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            display: block;
+        }
+
+        .nav {
+            display: none;
+        }
+
+        .hamburger {
+            display: block;
+        }
+
+        .main {
+            width: 100%;
+            padding: 90px 20px 60px 20px;
+            min-height: 100vh;
+        }
+
+        .dashboard-content {
+            gap: 20px;
+        }
+
+        .h1 { font-size: 8vh; }
+        .h2 { font-size: 6vh; }
+        .h3 { font-size: 4vh; }
+        .h4 { font-size: 2.5vh; }
+        .subtext { font-size: 2.5vh; }
+    }
+
+    @media (max-width: 480px) {
+        .hamburger {
+            top: 16px;
+            left: 16px;
+        }
+
+        .mobile-nav-inner {
+            padding: 72px 20px 32px;
+        }
+
+        .mobile-nav-link {
+            font-size: clamp(1rem, 4.6vw, 1.25rem);
+        }
+
+        .main {
+            padding: 80px 16px 48px 16px;
+        }
+
+        .h1 { font-size: 7vh; }
+        .h2 { font-size: 5vh; }
+        .h3 { font-size: 3.5vh; }
+        .h4 { font-size: 2.2vh; }
+        .subtext { font-size: 2.1vh; }
+
+        .card {
+            flex: 1 1 100%;
+        }
+
+        .quick-links-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+    }
+  </style>
+</head>
+<body>
+    <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation">☰</button>
+
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Dashboard navigation">
+        <div class="mobile-nav-inner">
+            <img class="mobile-nav-logo" src="logo/logot.png" alt="GIIS Robotics Logo">
+            <hr class="mobile-nav-divider">
+            <span class="mobile-nav-label">Menu</span>
+            <div class="mobile-nav-links">
+                <a class="mobile-nav-link active" href="/dashboard" onclick="closeMobileNav()">Dashboard</a>
+                <a class="mobile-nav-link" href="/usermgr" onclick="closeMobileNav()">User Manager</a>
+                <a class="mobile-nav-link" href="/socialsmanager" onclick="closeMobileNav()">Password Manager</a>
+                <a class="mobile-nav-link" href="/urlshortener" onclick="closeMobileNav()">URL Shortener</a>
+                <a class="mobile-nav-link" href="/qrgen" onclick="closeMobileNav()">QR Code Generator</a>
+                <a class="mobile-nav-link" href="https://drive.google.com/drive/folders/1RafsSvXM_gKINRmUk5dVvak85THhwBCO?usp=sharing" onclick="closeMobileNav()">Robotics Drive</a>
+                
+            </div>
+            <span class="mobile-nav-label">Logout</span>
+            <div class="mobile-nav-links">
+                <a class="mobile-nav-link" href="/logout" onclick="closeMobileNav()">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <img class="imgi" src="logo/logot.png" alt="GIIS Robotics Logo" width="70%">
+        <hr>
+        <span class="labels">Menu</span>
+        <button class="btna" onclick="window.location.href = '/dashboard';">Dashboard</button>
+        <button class="btn" onclick="window.location.href = '/usermgr';">User Manager</button>
+        <button class="btn" onclick="window.location.href = '/socialsmanager';">Password Manager</button>
+        <button class="btn" onclick="window.location.href = 'https://drive.google.com/drive/folders/1RafsSvXM_gKINRmUk5dVvak85THhwBCO?usp=sharing';">Robotics Drive</button>
+        <button class="btn" onclick="window.location.href = '/urlshortener';">Url Shortener</button>
+        <button class="btn" onclick="window.location.href = '/qrgen';">QR Code Generator</button>
+        
+
+        <span class="labels">Logout</span>
+        <button class="btn" onclick="window.location.href = '/logout';">Logout</button>
+    </div> 
+    <div class="main">
+        <h1 class="h2">Welcome, <%= locals.name %>!</h1>
+        <span class="subtext">Department of <%= locals.dept %></span>
+        <hr style="margin:26px 0 10px 0; border:0; height:2px; background:linear-gradient(90deg,#6c63ff,#4a47a3); border-radius:4px;" />
+        <div class="dashboard-content">
+            <div class="card" id="todoCard">
+                <h2>Team To-Do</h2>
+                <p class="quick-links-note">Keep track of quick tasks. Stored locally in this browser.</p>
+                <form class="todo-form" id="todoForm" autocomplete="off">
+                    <input type="text" id="todoInput" class="todo-input" placeholder="Add a note or action" aria-label="Add a new to-do" required>
+                    <button type="submit" class="todo-add-btn">Add</button>
+                </form>
+                <div class="todo-empty" id="todoEmpty">Nothing pending. Add something above.</div>
+                <ul class="todo-list" id="todoList" aria-live="polite"></ul>
+            </div>
+
+            <div class="card">
+                <h2>Quick Links</h2>
+                <p class="quick-links-note">Handy shortcuts for everyday tools.</p>
+                <div class="quick-links-grid">
+                    <a class="quick-link" href="/dashboard">Member Dashboard</a>
+                    <a class="quick-link" href="/usermgr">User Manager</a>
+                    <a class="quick-link" href="/socialsmanager">Password Manager</a>
+                    <a class="quick-link" href="/urlshortener">URL Shortener</a>
+                    <a class="quick-link" href="/qrgen">QR Code Generator</a>
+                    <a class="quick-link" href="https://drive.google.com/drive/folders/1RafsSvXM_gKINRmUk5dVvak85THhwBCO?usp=sharing" target="_blank" rel="noopener">Robotics Drive</a>
+                    <a class="quick-link" href="https://giisclubs.org" target="_blank" rel="noopener">GIIS Clubs Portal</a>
+                    <a class="quick-link" href="https://calendar.google.com" target="_blank" rel="noopener">Google Calendar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('active');
+        }
+
+        function closeMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.remove('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const hamburger = document.querySelector('.hamburger');
+
+            if (!mobileNav.contains(event.target) &&
+                !hamburger.contains(event.target) &&
+                mobileNav.classList.contains('active')) {
+                closeMobileNav();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileNav();
+            }
+        });
+        const TODO_STORAGE_KEY = 'dashboardTodos_v1';
+        const todoForm = document.getElementById('todoForm');
+        const todoInput = document.getElementById('todoInput');
+        const todoList = document.getElementById('todoList');
+        const todoEmpty = document.getElementById('todoEmpty');
+
+        function readTodos() {
+            try {
+                const raw = localStorage.getItem(TODO_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (error) {
+                console.warn('Unable to read todos:', error);
+                return [];
+            }
+        }
+
+        function writeTodos(todos) {
+            try {
+                localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(todos));
+            } catch (error) {
+                console.warn('Unable to save todos:', error);
+            }
+        }
+
+        function renderTodos() {
+            if (!todoList) { return; }
+            const todos = readTodos();
+            todoList.innerHTML = '';
+
+            if (todos.length === 0) {
+                todoEmpty.style.display = 'block';
+                return;
+            }
+
+            todoEmpty.style.display = 'none';
+
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = 'todo-item' + (todo.done ? ' done' : '');
+                li.dataset.id = todo.id;
+
+                const textSpan = document.createElement('span');
+                textSpan.className = 'todo-text';
+                textSpan.textContent = todo.text;
+
+                const actions = document.createElement('div');
+                actions.className = 'todo-actions';
+
+                const toggleBtn = document.createElement('button');
+                toggleBtn.type = 'button';
+                toggleBtn.className = 'todo-btn toggle';
+                toggleBtn.textContent = todo.done ? 'Mark Active' : 'Mark Done';
+                toggleBtn.dataset.action = 'toggle';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'todo-btn delete';
+                deleteBtn.textContent = 'Remove';
+                deleteBtn.dataset.action = 'delete';
+
+                actions.appendChild(toggleBtn);
+                actions.appendChild(deleteBtn);
+
+                li.appendChild(textSpan);
+                li.appendChild(actions);
+
+                todoList.appendChild(li);
+            });
+        }
+
+        function addTodo(text) {
+            const trimmed = text.trim();
+            if (!trimmed) { return; }
+
+            const todos = readTodos();
+            todos.unshift({
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                text: trimmed,
+                done: false
+            });
+            writeTodos(todos);
+            renderTodos();
+        }
+
+        function updateTodo(id, updater) {
+            const todos = readTodos();
+            const index = todos.findIndex(item => item.id === id);
+            if (index === -1) { return; }
+            todos[index] = updater(todos[index]);
+            writeTodos(todos);
+            renderTodos();
+        }
+
+        function removeTodo(id) {
+            const todos = readTodos().filter(item => item.id !== id);
+            writeTodos(todos);
+            renderTodos();
+        }
+
+        if (todoForm && todoInput && todoList && todoEmpty) {
+            renderTodos();
+
+            todoForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                addTodo(todoInput.value);
+                todoInput.value = '';
+                todoInput.focus();
+            });
+
+            todoList.addEventListener('click', function(event) {
+                const button = event.target.closest('button');
+                if (!button) { return; }
+
+                const listItem = button.closest('.todo-item');
+                if (!listItem) { return; }
+
+                const id = listItem.dataset.id;
+                const action = button.dataset.action;
+
+                if (action === 'toggle') {
+                    updateTodo(id, todo => ({ ...todo, done: !todo.done }));
+                } else if (action === 'delete') {
+                    removeTodo(id);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIIS Robotics Club</title>
+    <style>
+        @font-face {
+            font-family: 'crest';
+            src: url('/crst.otf') format('opentype');
+        }
+        html, body{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background-color: #000004;
+            color: #ffffff;
+            font-family: 'crest';
+            box-sizing: border-box;
+            overflow-x: auto;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        /* anchor tags  --- logo ---- login url */
+        ul{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        li{
+            float: left;
+        }
+        a{
+            text-decoration: none;
+            color: #ffffff;
+            padding: 10px 9px;
+            display: block;
+            font-size: large;
+        }
+        nav{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px clamp(20px, 5vw, 50px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: rgba(20, 33, 61, 0.9);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger:hover {
+            background: rgba(108, 99, 255, 0.8);
+            transform: scale(1.05);
+        }
+        
+        .hamburger:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100vh;
+                background: rgba(0, 0, 4, 0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: left 0.3s ease;
+                z-index: 1000;
+            }
+            
+            nav.open {
+                left: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.4rem;
+                width: 100%;
+                padding: 0 32px;
+            }
+            
+            nav li {
+                float: none;
+            }
+            
+            nav a {
+                font-size: 1.5rem;
+                padding: 15px 20px;
+                width: 100%;
+                text-align: center;
+                border-radius: 16px;
+                background: rgba(255,255,255,0.1);
+                border: 1px solid rgba(255,255,255,0.2);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+                transition: transform 0.3s ease, background 0.3s ease;
+            }
+            
+            logo {
+                margin: 2rem 0;
+            }
+        }
+        
+        nav ul {
+            display: flex;
+            flex: 1;
+            gap: 6px;
+        }
+        
+        nav logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        nav > a {
+            flex: 1;
+            text-align: right;
+        }
+        
+        
+        .main-content {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: calc(100vh - 60px);
+            background-image: url('/logo/optix.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            width: 100%;
+            padding: 0 clamp(20px, 5vw, 50px);
+        }
+        
+        .center-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .center-logo img {
+            max-width: 200px;
+            height: auto;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 10, 29, 0.8);
+            border-radius: 10px;
+            border: 1px solid #1a1a3a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6c63ff, #4a47a3);
+            border-radius: 10px;
+            border: 2px solid rgba(10, 10, 29, 0.8);
+            transition: all 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a52d5, #3e3b8a);
+            box-shadow: 0 0 8px rgba(108, 99, 255, 0.4);
+        }
+        
+        ::-webkit-scrollbar-thumb:active {
+            background: linear-gradient(135deg, #4a42c0, #2e2b70);
+        }
+        
+        ::-webkit-scrollbar-corner {
+            background: rgba(10, 10, 29, 0.8);
+        }
+        
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #6c63ff rgba(10, 10, 29, 0.8);
+        }
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6c63ff, #4a47a3);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'crest';
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
+        }
+        footer{
+            background-color: #171743;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 14px;
+            border-top: 1px solid #444;
+        }
+        .info{
+            width: clamp(350px, 22vw, 400px);
+            height: 60vh;
+            padding: 40px 30px;
+            padding-top: 12vh;
+            clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 18%);
+            background: linear-gradient(-135deg, #00309fb8, #680a368d);
+            backdrop-filter: blur(15px);
+            font-size: x-large;
+            box-shadow: 
+                0 20px 40px rgba(108, 99, 255, 0.3),
+                0 8px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .info:hover::before {
+            left: 100%;
+        }
+        
+        .info:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 25px 50px rgba(108, 99, 255, 0.4),
+                0 12px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .info h2 {
+            margin: 0 0 30px 0;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            line-height: 1.2;
+            font-weight: bold;
+            text-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(108, 99, 255, 0.5);
+            background: linear-gradient(45deg, #ffffff, #e0e0ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        
+        .info button {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-family: 'crest';
+            cursor: pointer;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.3s ease;
+        }
+        
+        .info button:hover::before {
+            left: 100%;
+        }
+        
+        .info button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info button:active {
+            transform: translateY(0);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #e0e0ff;
+            margin-bottom: 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <button class="hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
+        ☰
+    </button>
+    
+    <nav id="nav">
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="about">About</a></li>
+            <li><a href="contact">Contact Us</a></li>
+        </ul>
+        <logo>
+            <a href="/" ><img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="60" height="60"></a>
+        </logo>
+        <a href="/login">Login</a>
+    </nav>
+    <div class="main-content" style="padding-top: 80px;">
+        <div class="header">
+             <div class="info">
+                <h2>Contact Us</h2>
+                 <span class="subtitle">Contact us via email: <a href="mailto:giisrobotics@gmail.com">giisrobotics@gmail.com</a> <br> Or via instagram <br> @giis.roboticsclub</span>
+                <button onclick="window.location.href='https://www.instagram.com/giis.roboticsclub/'">Instagram</button>
+             </div>
+        </div>        
+    </div> 
+    <footer>
+        Developed by Vasipalli Eshan Aditya | Maintained by GIIS Robotics Club &copy; <%= new Date().getFullYear() %> - <%= new Date().getFullYear() + 1 %>
+    </footer>
+    <script>
+        function toggleNav() {
+            const nav = document.getElementById('nav');
+            nav.classList.toggle('open');
+        }
+        
+        // Close nav when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('nav');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (nav.classList.contains('open') && 
+                !nav.contains(event.target) && 
+                !hamburger.contains(event.target)) {
+                nav.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

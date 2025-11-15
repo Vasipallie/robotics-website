@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Reset | GIIS Robotics Club</title>
+    <style>
+        @font-face {
+            font-family: 'crest';
+            src: url('/crst.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'crestb';
+            src: url('/crstb.otf') format('opentype');
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background-color: #0a0a1d;
+            color: #ffffff;
+            font-family: 'crest';
+            background-image: url('/logo/background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .id{
+            font-size: medium;
+            color: #ffffff;
+            position: absolute;
+            top: 12px;
+            margin-left: 15px;
+        }
+        nav{
+            padding-top: 5px;
+            padding-inline: 10px;
+            background-color: #0a0a1d;
+            cursor: pointer;
+
+        }
+        img{
+            margin: 0;
+            padding: 0;
+
+        }
+        .main-content{
+            backdrop-filter: blur(5px);
+            width: 420px;
+            height: 440px;
+            margin: auto;
+            margin-top: 100px;
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #a1a1a1;
+            background-color: rgba(11, 0, 16, 0.746);
+            border-radius: 10px;
+            padding: 20px;
+            gap: 0;         
+        }
+        .text{
+            font-size: xx-large;
+            font-family: 'crestb';
+        }
+        hr{
+            border: 1px solid #d0d0d0;
+            border-radius: 7px 7px 7px 7px;
+            width: 100%;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        label {
+            font-size: 16px;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"], input[type="password"] {
+            padding: 12px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 16px;
+            font-family: 'crest';
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="submit"] {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #6c63ff, #4a47a3);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'crest';
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
+        }
+        
+        input[type="submit"]:hover {
+            background: linear-gradient(135deg, #5a52d5, #3e3b8a);
+            transform: translateY(-2px);
+        }
+        
+        input[type="submit"]:active {
+            transform: translateY(0);
+        }
+        
+        .code-input-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .code-input {
+            width: 50px;
+            height: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-family: 'crest';
+            transition: border-color 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .code-input:focus {
+            outline: none;
+            border-color: #6c63ff;
+            box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+        }
+        
+        .code-input:valid {
+            border-color: #4CAF50;
+        }
+        .error {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                width: 90%;
+                max-width: 420px;
+                margin-top: 80px;
+                padding: 15px;
+            }
+            
+            .text {
+                font-size: x-large;
+            }
+            
+            nav {
+                padding: 10px;
+            }
+            
+            .id {
+                font-size: small;
+                margin-left: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                width: 95%;
+                margin-top: 60px;
+                padding: 10px;
+            }
+            
+            .text {
+                font-size: large;
+            }
+            
+            input[type="text"], input[type="password"] {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            input[type="submit"] {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body> 
+    <nav onclick="window.location.href='/'"> <img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="30" height="30"> <span class="id">GIIS Robotics Club | <%= new Date().getFullYear() %> - <%= new Date().getFullYear() + 1 %></span></nav>
+     
+    <div class="main-content">
+        <img src="logo/logo-white.png" alt="GIIS Robotics Club Logo" width="80" height="80">
+        <span class="text">Master Reset</span>
+        <span class="error"><%=  locals.error %></span>
+        <hr>
+        <form action="/masterreset" method="post">
+            <label for="reset-code">Enter Master Reset Code:</label>
+            <div class="code-input-container">
+                <input type="text" class="code-input" name="code1" id="code1" maxlength="4" required>
+                <input type="text" class="code-input" name="code2" id="code2" maxlength="4" required>
+                <input type="text" class="code-input" name="code3" id="code3" maxlength="4" required>
+                <input type="text" class="code-input" name="code4" id="code4" maxlength="4" required>
+                <input type="text" class="code-input" name="code5" id="code5" maxlength="4" required>
+            </div>
+            <span>WARNING! The Master Reset Key will erase the Admin Panel and all user accounts and cannot be undone. Only do this if you are the new Core, or this is your last resort.</span>
+            <input type="submit" value="Reset System">
+        </form>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const inputs = document.querySelectorAll('.code-input');
+                
+                inputs.forEach((input, index) => {
+                    input.addEventListener('input', function(e) {
+                        if (this.value.length === 4 && index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    });
+                    
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                            inputs[index - 1].focus();
+                        }
+                        
+                        if (!/[a-zA-Z0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                            e.preventDefault();
+                        }
+                    });
+                    
+                    input.addEventListener('paste', function(e) {
+                        e.preventDefault();
+                        const paste = (e.clipboardData || window.clipboardData).getData('text');
+                        const cleanPaste = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                        
+                        for (let i = 0; i < inputs.length && i * 4 < cleanPaste.length; i++) {
+                            const chunk = cleanPaste.substr(i * 4, 4);
+                            inputs[i].value = chunk;
+                        }
+                        
+                        const nextEmpty = Array.from(inputs).find(inp => inp.value.length < 4);
+                        if (nextEmpty) {
+                            nextEmpty.focus();
+                        } else {
+                            inputs[inputs.length - 1].focus();
+                        }
+                    });
+                });
+                
+                inputs[0].focus();
+            });
+        </script>
+    </div> 
+        
+</body>
+</html>
