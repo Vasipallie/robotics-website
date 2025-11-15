@@ -32,10 +32,10 @@ app.route('/contact').get((req, res) => {
 
 //LOGIN
 app.route('/login').get((req, res) => {
-     const session = req.cookies.session;
+    /*  const session = req.cookies.session;
     if (session) {
         return res.redirect('/dashboard');
-    } 
+    }  */
     res.render('login');
 })
 app.post('/login', async (req, res) => { 

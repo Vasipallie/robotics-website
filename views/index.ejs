@@ -93,57 +93,100 @@
             transition: all 0.3s ease;
             z-index: 1001;
         }
-        
+
         .hamburger:hover {
             background: rgba(108, 99, 255, 0.8);
             transform: scale(1.05);
         }
-        
+
         .hamburger:active {
             transform: scale(0.95);
         }
-        
+
         .mobile-nav {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            padding: 40px 24px;
-            background: linear-gradient(135deg, rgba(33, 24, 43, 0.98), rgba(10, 10, 34, 0.95));
+            inset: 0;
+            background: linear-gradient(180deg, rgba(20, 33, 61, 0.96) 45%, rgba(30, 30, 47, 0.96) 100%);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
-            flex-direction: column;
-            justify-content: center;
-            align-items: stretch;
-            gap: 18px;
-            transition: all 0.4s ease;
+            overflow-y: auto;
         }
-        
+
         .mobile-nav.active {
             display: flex;
         }
-        
-        .mobile-nav a {
-            font-size: 24px;
-            color: white;
-            text-decoration: none;
-            padding: 15px 24px;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
+
+        .mobile-nav-inner {
             width: 100%;
-            text-align: center;
-            display: block;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 80px 32px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
-        
-        .mobile-nav a:hover {
-            background: rgba(108, 99, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+
+        .mobile-nav-logo {
+            width: clamp(140px, 45vw, 220px);
+        }
+
+        .mobile-nav-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.3);
+            border: 0;
+            border-radius: 999px;
+        }
+
+        .mobile-nav-label {
+            align-self: flex-start;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #bfbfbf;
+            margin-top: 4px;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: linear-gradient(130deg, rgba(30,32,31,0.95) 56%, rgba(39,13,64,0.9) 100%) padding-box, linear-gradient(130deg, #7f7f7f, #282a29) border-box;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: clamp(1rem, 2.6vw, 1.3rem);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+            transition: transform 0.18s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link:focus-visible {
+            transform: translateX(4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+            border-color: rgba(154,163,160,0.9);
+            outline: none;
+        }
+
+        .mobile-nav-link:active {
+            transform: translateX(1px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.28) inset;
+        }
+
+        .mobile-nav-link.active {
+            background: linear-gradient(180deg, rgba(82,108,218,1) 0%, rgba(44,75,205,1) 24%, rgba(82,108,218,1) 71%, rgba(82,108,218,1) 100%) padding-box, linear-gradient(to right, #2c4bcd, #2c4bcd) border-box;
+            box-shadow: 0 14px 28px rgba(66,84,214,0.35);
         }
         
         .main-content {
@@ -406,6 +449,8 @@
     </style>
 </head>
 <body>
+    <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation">☰</button>
+
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
@@ -415,15 +460,24 @@
         <logo>
             <a href="/" ><img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="60" height="60"></a>
         </logo>
-        <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation">☰</button>
         <a href="/login">Login</a>
     </nav>
-    
-    <div class="mobile-nav" id="mobileNav">
-        <a href="/" onclick="closeMobileNav()">Home</a>
-        <a href="/about" onclick="closeMobileNav()">About</a>
-        <a href="/contact" onclick="closeMobileNav()">Contact Us</a>
-        <a href="/login" onclick="closeMobileNav()">Login</a>
+
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Primary navigation">
+        <div class="mobile-nav-inner">
+            <img class="mobile-nav-logo" src="/logo/logo-white.png" alt="GIIS Robotics Club Logo">
+            <hr class="mobile-nav-divider">
+            <span class="mobile-nav-label">Explore</span>
+            <div class="mobile-nav-links">
+                <a class="mobile-nav-link active" href="/" onclick="closeMobileNav()">Home</a>
+                <a class="mobile-nav-link" href="/about" onclick="closeMobileNav()">About</a>
+                <a class="mobile-nav-link" href="/contact" onclick="closeMobileNav()">Contact Us</a>
+            </div>
+            <span class="mobile-nav-label">Account</span>
+            <div class="mobile-nav-links">
+                <a class="mobile-nav-link" href="/login" onclick="closeMobileNav()">Login</a>
+            </div>
+        </div>
     </div>
     <div class="main-content">
         <div class="header">

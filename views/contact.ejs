@@ -47,9 +47,32 @@
             padding: 14px clamp(20px, 5vw, 50px);
             position: fixed;
             top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: linear-gradient(to right, rgba(33, 24, 43, 0.95), rgba(10, 10, 34, 0.92));
+            border-radius: 0 0 20px 20px;
+            min-height: 72px;
+            width: 100%;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+
+        nav ul {
+            display: flex;
+            flex: 1;
+            gap: 6px;
+        }
+
+        nav logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        nav > a {
+            flex: 1;
+            text-align: right;
         }
 
         .hamburger {
@@ -57,7 +80,6 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            z-index: 1001;
             background: rgba(20, 33, 61, 0.9);
             border: none;
             color: white;
@@ -68,86 +90,102 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            z-index: 1001;
         }
-        
+
         .hamburger:hover {
             background: rgba(108, 99, 255, 0.8);
             transform: scale(1.05);
         }
-        
+
         .hamburger:active {
             transform: scale(0.95);
         }
 
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-            
-            nav {
-                position: fixed;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100vh;
-                background: rgba(0, 0, 4, 0.95);
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                transition: left 0.3s ease;
-                z-index: 1000;
-            }
-            
-            nav.open {
-                left: 0;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1.4rem;
-                width: 100%;
-                padding: 0 32px;
-            }
-            
-            nav li {
-                float: none;
-            }
-            
-            nav a {
-                font-size: 1.5rem;
-                padding: 15px 20px;
-                width: 100%;
-                text-align: center;
-                border-radius: 16px;
-                background: rgba(255,255,255,0.1);
-                border: 1px solid rgba(255,255,255,0.2);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-                transition: transform 0.3s ease, background 0.3s ease;
-            }
-            
-            logo {
-                margin: 2rem 0;
-            }
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(20, 33, 61, 0.96) 45%, rgba(30, 30, 47, 0.96) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            overflow-y: auto;
         }
-        
-        nav ul {
+
+        .mobile-nav.active {
             display: flex;
-            flex: 1;
-            gap: 6px;
         }
-        
-        nav logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+
+        .mobile-nav-inner {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 80px 32px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
         }
-        
-        nav > a {
-            flex: 1;
-            text-align: right;
+
+        .mobile-nav-logo {
+            width: clamp(140px, 45vw, 220px);
+        }
+
+        .mobile-nav-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,0.3);
+            border: 0;
+            border-radius: 999px;
+        }
+
+        .mobile-nav-label {
+            align-self: flex-start;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #bfbfbf;
+            margin-top: 4px;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background: linear-gradient(130deg, rgba(30,32,31,0.95) 56%, rgba(39,13,64,0.9) 100%) padding-box, linear-gradient(130deg, #7f7f7f, #282a29) border-box;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: clamp(1rem, 2.6vw, 1.3rem);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+            transition: transform 0.18s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link:focus-visible {
+            transform: translateX(4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+            border-color: rgba(154,163,160,0.9);
+            outline: none;
+        }
+
+        .mobile-nav-link:active {
+            transform: translateX(1px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.28) inset;
+        }
+
+        .mobile-nav-link.active {
+            background: linear-gradient(180deg, rgba(82,108,218,1) 0%, rgba(44,75,205,1) 24%, rgba(82,108,218,1) 71%, rgba(82,108,218,1) 100%) padding-box, linear-gradient(to right, #2c4bcd, #2c4bcd) border-box;
+            box-shadow: 0 14px 28px rgba(66,84,214,0.35);
         }
         
         
@@ -336,14 +374,81 @@
             margin-bottom: 20px;
             display: block;
         }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            nav > a {
+                display: none;
+            }
+
+            .main-content {
+                justify-content: center;
+                padding: 90px 20px 20px;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .info {
+                width: 90%;
+                max-width: 400px;
+                height: auto;
+                min-height: 50vh;
+                padding: 30px 25px;
+                clip-path: none;
+                border-radius: 20px;
+            }
+
+            .info h2 {
+                font-size: clamp(2rem, 8vw, 3rem);
+                text-align: center;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            .info button {
+                width: 100%;
+                padding: 15px 25px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 12px 15px;
+                min-height: 60px;
+            }
+
+            .main-content {
+                padding: 80px 16px 16px;
+            }
+
+            .info {
+                width: 95%;
+                padding: 25px 20px;
+                min-height: 45vh;
+            }
+
+            footer {
+                padding: 15px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
-    <button class="hamburger" onclick="toggleNav()" aria-label="Toggle navigation">
-        ☰
-    </button>
-    
-    <nav id="nav">
+    <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation">☰</button>
+
+    <nav>
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="about">About</a></li>
@@ -354,6 +459,23 @@
         </logo>
         <a href="/login">Login</a>
     </nav>
+
+    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Primary navigation">
+        <div class="mobile-nav-inner">
+            <img class="mobile-nav-logo" src="/logo/logo-white.png" alt="GIIS Robotics Club Logo">
+            <hr class="mobile-nav-divider">
+            <span class="mobile-nav-label">Explore</span>
+            <div class="mobile-nav-links">
+                <a class="mobile-nav-link" href="/" onclick="closeMobileNav()">Home</a>
+                <a class="mobile-nav-link" href="/about" onclick="closeMobileNav()">About</a>
+                <a class="mobile-nav-link active" href="/contact" onclick="closeMobileNav()">Contact Us</a>
+            </div>
+            <span class="mobile-nav-label">Account</span>
+            <div class="mobile-nav-links">
+                <a class="mobile-nav-link" href="/login" onclick="closeMobileNav()">Login</a>
+            </div>
+        </div>
+    </div>
     <div class="main-content" style="padding-top: 80px;">
         <div class="header">
              <div class="info">
@@ -367,20 +489,30 @@
         Developed by Vasipalli Eshan Aditya | Maintained by GIIS Robotics Club &copy; <%= new Date().getFullYear() %> - <%= new Date().getFullYear() + 1 %>
     </footer>
     <script>
-        function toggleNav() {
-            const nav = document.getElementById('nav');
-            nav.classList.toggle('open');
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('active');
         }
-        
-        // Close nav when clicking outside
+
+        function closeMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.remove('active');
+        }
+
         document.addEventListener('click', function(event) {
-            const nav = document.getElementById('nav');
+            const mobileNav = document.getElementById('mobileNav');
             const hamburger = document.querySelector('.hamburger');
-            
-            if (nav.classList.contains('open') && 
-                !nav.contains(event.target) && 
+
+            if (mobileNav.classList.contains('active') &&
+                !mobileNav.contains(event.target) &&
                 !hamburger.contains(event.target)) {
-                nav.classList.remove('open');
+                closeMobileNav();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileNav();
             }
         });
     </script>
