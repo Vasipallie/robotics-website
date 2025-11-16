@@ -157,21 +157,180 @@
         }
         
         .main-content {
+            padding: 120px 24px 110px;
+        }
+
+        .about-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 80px); 
             flex-direction: column;
+            gap: 54px;
         }
-        
-        .center-logo {
+
+        .hero {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
             text-align: center;
-            margin-bottom: 30px;
         }
-        
-        .center-logo img {
-            max-width: 200px;
-            height: auto;
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 5vw, 3.6rem);
+            margin: 0;
+            letter-spacing: 1.6px;
+        }
+
+        .hero p {
+            margin: 0 auto;
+            max-width: 720px;
+            font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+            line-height: 1.7;
+            color: rgba(255,255,255,0.78);
+        }
+
+        .team-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 46px;
+        }
+
+        .team-section {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .section-header::before {
+            content: "";
+            width: 40px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(108,99,255,0.85), rgba(74,71,163,0.85));
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+            letter-spacing: 1px;
+        }
+
+        .member-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 36px;
+        }
+
+        .member-card {
+            background: linear-gradient(150deg, rgba(34,26,58,0.85), rgba(17,16,34,0.92));
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 26px;
+            padding: 32px 26px 34px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+            text-align: center;
+            box-shadow: 0 28px 45px -20px rgba(0,0,0,0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-photo-wrapper {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, rgba(108,99,255,0.8), rgba(74,71,163,0.85));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .team-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .team-photo.hidden {
+            display: none;
+        }
+
+        .photo-fallback {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.92);
+            letter-spacing: 1px;
+        }
+
+        .photo-fallback.visible {
+            display: flex;
+        }
+
+        .member-info h3 {
+            margin: 0;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            letter-spacing: 0.6px;
+        }
+
+        .member-info span {
+            display: block;
+            margin-top: 6px;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.65);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.65);
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .team-photo-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-header::before {
+                width: 80px;
+            }
+
+            .member-gallery {
+                gap: 28px;
+            }
+
+            .member-card {
+                padding: 28px 24px;
+            }
+
+            .team-photo-wrapper {
+                width: 180px;
+                height: 180px;
+            }
         }
     </style>
 </head>
@@ -183,9 +342,8 @@
     <nav id="nav">
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="about">About</a></li>
-            <li><a href="links">Links</a></li>
-            <li><a href="contact">Contact Us</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact Us</a></li>
         </ul>
         <logo>
             <img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="60" height="60">
@@ -193,13 +351,201 @@
         <a href="/login">Login</a>
     </nav>
     
-        <div class="main-content" style="padding-top: 80px;">
-            <div class="header">
-                <div class="globe"> </div>
-                <div class="content"> </div>
+        <div class="main-content">
+            <div class="about-wrapper">
+                <header class="hero">
+                    <h1>Meet The Robotics Leadership</h1>
+                    <p>Across engineering, operations, logistics, and outreach, these student leaders keep the GIIS Robotics Club building, learning, and competing together.</p>
+                </header>
+
+                <div class="team-sections">
+                    <section class="team-section">
+                        <div class="section-header">
+                            <h2>Core Leadership</h2>
+                        </div>
+                        <div class="member-gallery">
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/vasipalli.jpg" alt="Portrait of Vasipalli Eshan Aditya" data-initials="VE">
+                                    <span class="photo-fallback" aria-hidden="true">VE</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Vasipalli Eshan Aditya</h3>
+                                    <span>President</span>
+                                </div>
+                            </article>
+                            
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/akshit.jpg" alt="Portrait of Akshit Dash" data-initials="AD">
+                                    <span class="photo-fallback" aria-hidden="true">AD</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Akshit Dash</h3>
+                                    <span>Vice President</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/gayatri.jpg" alt="Portrait of Gayatri Pandkar" data-initials="GP">
+                                    <span class="photo-fallback" aria-hidden="true">GP</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Gayatri Pandkar</h3>
+                                    <span>Secretary</span>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="team-section">
+                        <div class="section-header">
+                            <h2>Technology &amp; Hardware</h2>
+                        </div>
+                        <div class="member-gallery">
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/duaa.jpg" alt="Portrait of Duaa Ahmed Sherief" data-initials="DA">
+                                    <span class="photo-fallback" aria-hidden="true">DA</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Duaa Ahmed Sherief</h3>
+                                    <span>Head of Department</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/rian.jpg" alt="Portrait of Rian Mallik" data-initials="RM">
+                                    <span class="photo-fallback" aria-hidden="true">RM</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Rian Mallik</h3>
+                                    <span>Technology &amp; Hardware</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/raahi-chheda.jpg" alt="Portrait of Raahi Chheda" data-initials="RC">
+                                    <span class="photo-fallback" aria-hidden="true">RC</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Raahi Chheda</h3>
+                                    <span>Technology &amp; Hardware</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/lin.jpg" alt="Portrait of Lin Yan Aung" data-initials="LA">
+                                    <span class="photo-fallback" aria-hidden="true">LA</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Lin Yan Aung</h3>
+                                    <span>Technology &amp; Hardware</span>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="team-section">
+                        <div class="section-header">
+                            <h2>Admin &amp; Operations</h2>
+                        </div>
+                        <div class="member-gallery">
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/nidhi.jpg" alt="Portrait of Nidhi Bhat" data-initials="NB">
+                                    <span class="photo-fallback" aria-hidden="true">NB</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Nidhi Bhat</h3>
+                                    <span>Head of Department</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/niteesh.jpg" alt="Portrait of Yellumahanthi Venkata Niteesh Kumar" data-initials="YK">
+                                    <span class="photo-fallback" aria-hidden="true">YK</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Yellumahanthi Venkata Niteesh Kumar</h3>
+                                    <span>Admin &amp; Operations</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/nitya.jpg" alt="Portrait of Nitya Arora" data-initials="NA">
+                                    <span class="photo-fallback" aria-hidden="true">NA</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Nitya Arora</h3>
+                                    <span>Admin &amp; Operations</span>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="team-section">
+                        <div class="section-header">
+                            <h2>Finance &amp; Logistics</h2>
+                        </div>
+                        <div class="member-gallery">
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/anuraag.jpg" alt="Portrait of Anuraag Vombatkere" data-initials="AV">
+                                    <span class="photo-fallback" aria-hidden="true">AV</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Anuraag Vombatkere</h3>
+                                    <span>Head of Department</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/madhav.jpg" alt="Portrait of Madhav Sikri" data-initials="MS">
+                                    <span class="photo-fallback" aria-hidden="true">MS</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Madhav Sikri</h3>
+                                    <span>Finance &amp; Logistics</span>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
+                    <section class="team-section">
+                        <div class="section-header">
+                            <h2>Design &amp; Marketing</h2>
+                        </div>
+                        <div class="member-gallery">
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/amrit.jpg" alt="Portrait of Amrit Narayanan" data-initials="AN">
+                                    <span class="photo-fallback" aria-hidden="true">AN</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Amrit Narayanan</h3>
+                                    <span>Head of Department</span>
+                                </div>
+                            </article>
+                            <article class="member-card">
+                                <div class="team-photo-wrapper">
+                                    <img class="team-photo" src="/resources/images/ahana.jpg" alt="Portrait of Ahana Gambhira" data-initials="AG">
+                                    <span class="photo-fallback" aria-hidden="true">AG</span>
+                                </div>
+                                <div class="member-info">
+                                    <h3>Ahana Gambhira</h3>
+                                    <span>Design &amp; Marketing</span>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+
+                <p class="footer-note">Got questions or want to collaborate? Reach out through our contact page and we’ll connect you with the right team.</p>
             </div>
-            
-        </div>    <script>
+        </div>
+
+    <script>
         function toggleNav() {
             const nav = document.getElementById('nav');
             nav.classList.toggle('open');
@@ -214,6 +560,45 @@
                 !nav.contains(event.target) && 
                 !hamburger.contains(event.target)) {
                 nav.classList.remove('open');
+            }
+        });
+
+        document.querySelectorAll('.team-photo').forEach(photo => {
+            const fallback = photo.nextElementSibling;
+            const initials = photo.dataset.initials || '';
+            if (fallback && initials) {
+                fallback.textContent = initials;
+            }
+
+            const showFallback = () => {
+                photo.classList.add('hidden');
+                if (fallback) {
+                    fallback.classList.add('visible');
+                }
+            };
+
+            const hideFallback = () => {
+                photo.classList.remove('hidden');
+                if (fallback) {
+                    fallback.classList.remove('visible');
+                }
+            };
+
+            photo.addEventListener('error', showFallback);
+            photo.addEventListener('load', () => {
+                if (photo.naturalWidth === 0) {
+                    showFallback();
+                } else {
+                    hideFallback();
+                }
+            });
+
+            if (photo.complete) {
+                if (photo.naturalWidth === 0) {
+                    showFallback();
+                } else {
+                    hideFallback();
+                }
             }
         });
     </script>

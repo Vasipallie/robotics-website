@@ -38,6 +38,9 @@ app.route('/').get((req, res) => {
 app.route('/contact').get((req, res) => {
     res.render('contact');
 });
+app.route('/about').get((req, res) => {
+    res.render('about');
+});
 
 //LOGIN
 app.route('/login').get((req, res) => {
