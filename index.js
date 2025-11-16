@@ -21,7 +21,16 @@ app.use(cookieParser());
 //initialize supabase
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
+const supabaseAdmin = supabaseServiceRoleKey
+    ? createClient(supabaseUrl, supabaseServiceRoleKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false
+        }
+    })
+    : null;
 
 app.route('/').get((req, res) => {
     res.render('index');
@@ -103,7 +112,6 @@ app.route('/dashboard').get(async (req, res) => {
             console.error('Database error:', dbError);
             return res.sendStatus(500).send('Internal Server Error');
         }
-        //save a cookie with name and dept
         res.cookie('userInfo', JSON.stringify({ name: userData.name || user.email, dept: userData.dept || 'Unknown' }), { 
             maxAge: 2 * 24 * 60 * 60 * 1000,
             httpOnly: true,
@@ -169,8 +177,6 @@ function encrypt(text, secret) {
   
   let encrypted = cipher.update(text, 'utf8', 'hex');
   encrypted += cipher.final('hex');
-  
-  // Combine IV and encrypted data
   return iv.toString('hex') + ':' + encrypted;
 }
 function decrypt(encryptedData, secret) {
@@ -200,11 +206,47 @@ function decrypt(encryptedData, secret) {
     throw error;
   }
 }
+function createHttpError(status, message) {
+    const error = new Error(message);
+    error.status = status;
+    return error;
+}
+function verifyMasterKey(masterKey) {
+    if (!masterKey) {
+        throw createHttpError(400, 'Master key is required');
+    }
+    if (masterKey !== process.env.MASTER_KEY) {
+        throw createHttpError(403, 'Invalid master key');
+    }
+}
+function ensureAdminClient() {
+    if (!supabaseAdmin) {
+        throw createHttpError(500, 'Server authentication is not configured');
+    }
+    return supabaseAdmin;
+}
+function sanitize(value) {
+    return typeof value === 'string' ? value.trim() : '';
+}
+
+async function handleRoute(res, handler) {
+    try {
+        const payload = await handler();
+        res.json({ success: true, ...payload });
+    } catch (err) {
+        const status = err.status || 500;
+        const message = err.message || 'Server error occurred';
+        if (!err.status) {
+            console.error(err);
+        }
+        res.status(status).json({ success: false, message });
+    }
+}
 app.route('/qrgen').get(async (req, res) => {
     const userInfo = req.cookies.userInfo ? JSON.parse(req.cookies.userInfo) : { name: 'Guest', dept: 'Unknown' };
     res.render('qrgen', { name: userInfo.name, dept: userInfo.dept});
 });
-
+  
 
 //PASSWORD MANAGER ROUTES
 app.route('/socialsmanager').get(async (req, res) => {
@@ -260,7 +302,6 @@ app.post('/master2pass', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error occurred' });
     }
 });
-
 app.post('/addpassword', async (req, res) => {
     const { name, url, password, masterKey } = req.body;
     
@@ -301,6 +342,102 @@ app.post('/addpassword', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error occurred' });
     }
 });
+app.post('/master2users', (req, res) => handleRoute(res, async () => {
+    const { masterKey } = req.body;
+    verifyMasterKey(masterKey);
+
+    const { data: users, error } = await supabaseClient
+        .from('users')
+        .select('id, email, name, dept')
+        .order('name', { ascending: true });
+
+    if (error) {
+        console.error('Error fetching users:', error);
+        throw createHttpError(500, 'Error fetching users');
+    }
+
+    return {
+        users: users || [],
+        message: 'Users retrieved successfully'
+    };
+}));
+
+app.post('/users/create', (req, res) => handleRoute(res, async () => {
+    const { masterKey, email, password, name, dept } = req.body;
+    verifyMasterKey(masterKey);
+
+    const trimmedEmail = sanitize(email).toLowerCase();
+    const trimmedName = sanitize(name);
+    const trimmedDept = sanitize(dept);
+    const cleanPassword = typeof password === 'string' ? password : '';
+
+    if (!trimmedEmail || !cleanPassword || !trimmedName || !trimmedDept) {
+        throw createHttpError(400, 'All fields are required');
+    }
+
+    if (cleanPassword.length < 6) {
+        throw createHttpError(400, 'Password must be at least 6 characters long');
+    }
+
+    const adminClient = ensureAdminClient();
+    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+        email: trimmedEmail,
+        password: cleanPassword,
+        email_confirm: true
+    });
+
+    if (authError) {
+        console.error('Supabase auth create user error:', authError);
+        const status = authError.status || 500;
+        throw createHttpError(status, authError.message || 'Error creating auth user');
+    }
+    
+    const userId = authData.user?.id;
+
+    const { error: insertError } = await supabaseClient
+        .from('users')
+        .insert([
+            { id: userId, email: trimmedEmail, name: trimmedName, dept: trimmedDept }
+        ]);
+    if (insertError) {
+        console.error('Error inserting user profile:', insertError);
+        throw createHttpError(500, 'Error saving user profile');
+    }
+    return { message: 'User account created successfully' };
+}));
+
+app.post('/users/delete', (req, res) => handleRoute(res, async () => {
+    const { masterKey, id } = req.body;
+    verifyMasterKey(masterKey);
+
+    const trimmedId = sanitize(id);
+
+    if (!trimmedId) {
+        throw createHttpError(400, 'User ID is required');
+    }
+
+    const adminClient = ensureAdminClient();
+
+    const { error: authError } = await adminClient.auth.admin.deleteUser(trimmedId);
+
+    if (authError) {
+        console.error('Supabase auth delete error:', authError);
+        const status = authError.status || 500;
+        throw createHttpError(status, authError.message || 'Error removing auth user');
+    }
+
+    const { error: deleteError } = await supabaseClient
+        .from('users')
+        .delete()
+        .eq('id', trimmedId);
+
+    if (deleteError) {
+        console.error('Error deleting user profile:', deleteError);
+        throw createHttpError(500, 'Error deleting user profile');
+    }
+
+    return { message: 'User deleted successfully' };
+}));
 app.post('/editpassword', async (req, res) => {
     const { masterKey, originalName, name, url, password } = req.body;
     
@@ -415,7 +552,6 @@ app.post('/masterreset', async (req, res) => {
     if (req.body.masterkey !== process.env.MASTER_KEY) {
         return res.status(403).send('Invalid master key');
     }
-    //MASTERRESET LOGIC
     res.send('Master Reset POST request received');
 });
 

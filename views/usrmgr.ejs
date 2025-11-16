@@ -356,13 +356,65 @@ body{
     .copy-btn:active,.open-btn:active{transform:translateY(0);}   
     .empty-note{font-size:1.7vh;color:#bfbfe0;}
     .toast{position:fixed;bottom:26px;right:26px;background:linear-gradient(135deg,#6c63ff,#4a47a3);color:#fff;padding:14px 20px;border-radius:14px;font-size:1.6vh;font-family:'crest';box-shadow:0 10px 26px -6px rgba(0,0,0,0.55);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .35s ease, transform .35s ease;}
-    .toast.show{opacity:1;transform:translateY(0);}  
+    .toast.show{opacity:1;transform:translateY(0);}
+    .user-manager-content{display:none;flex-direction:column;gap:30px;margin-top:30px;}
+    .user-manager-content.active{display:flex;}
+    .manager-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+    .toggle-add-btn{
+        padding:12px 24px;
+        font-size:1.8vh;
+        font-family:'crest';
+        border-radius:12px;
+        border:0;
+        cursor:pointer;
+        background:linear-gradient(135deg,#4caf50,#388e3c);
+        color:#fff;
+        font-weight:600;
+        letter-spacing:0.8px;
+        transition:background .25s ease, transform .18s ease, box-shadow .25s ease;
+        box-shadow:0 8px 20px -6px rgba(76,175,80,0.55);
+    }
+    .toggle-add-btn:hover{background:linear-gradient(135deg,#45a049,#2e7d32);transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(76,175,80,0.6);}
+    .toggle-add-btn:active{transform:translateY(0);box-shadow:0 6px 16px -4px rgba(76,175,80,0.5);}
+    .lock-manager-btn{
+        padding:12px 24px;
+        font-size:1.8vh;
+        font-family:'crest';
+        border-radius:12px;
+        border:0;
+        cursor:pointer;
+        background:linear-gradient(135deg,#f44336,#d32f2f);
+        color:#fff;
+        letter-spacing:0.8px;
+        transition:background .25s ease, transform .18s ease, box-shadow .25s ease;
+        box-shadow:0 8px 20px -6px rgba(244,67,54,0.55);
+    }
+    .lock-manager-btn:hover{background:linear-gradient(135deg,#e53935,#c62828);transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(244,67,54,0.6);}
+    .lock-manager-btn:active{transform:translateY(0);box-shadow:0 6px 16px -4px rgba(244,67,54,0.5);}
+    .user-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+    .user-item{display:flex;flex-wrap:wrap;gap:12px;align-items:center;background:rgba(255,255,255,0.06);padding:14px 18px;border-radius:16px;border:1px solid rgba(255,255,255,0.08);position:relative;}
+    .user-main{display:flex;flex-direction:column;gap:4px;min-width:220px;}
+    .user-name{font-size:1.9vh;font-weight:600;color:#ffffff;letter-spacing:0.3px;}
+    .user-email{font-size:1.6vh;color:#c5c5d9;word-break:break-all;}
+    .user-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+    .dept-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;font-size:1.5vh;background:rgba(108,99,255,0.18);border:1px solid rgba(108,99,255,0.35);border-radius:999px;color:#d0d0ff;letter-spacing:0.3px;}
+    .user-id{font-size:1.35vh;color:rgba(255,255,255,0.55);}
+    .user-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;}
+    .delete-btn{background:rgba(244,67,54,0.15);border:1px solid rgba(244,67,54,0.25);color:#f44336;padding:8px 16px;font-size:1.5vh;border-radius:10px;font-family:'crest';cursor:pointer;transition:background .25s ease, transform .18s ease;}
+    .delete-btn:hover{background:rgba(244,67,54,0.28);transform:translateY(-2px);}
+    .delete-btn:active{transform:translateY(0);}
+    .user-actions button:disabled{opacity:0.6;cursor:not-allowed;}
+    .cancel-btn{padding:14px 24px;font-size:2vh;font-family:'crest';border-radius:999px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;transition:background .25s ease, transform .18s ease, box-shadow .25s ease;}
+    .cancel-btn:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(255,255,255,0.35);}
+    .cancel-btn:active{transform:translateY(0);}
     @media (max-width:1080px){
         .nav{width:270px;}
         .main{width:calc(100% - 270px);}
         .url-item{flex-direction:column;align-items:flex-start;}
         .original-link,.short-link{max-width:100%;}
         .actions{width:100%;justify-content:flex-start;margin-left:0;}
+        .user-item{flex-direction:column;align-items:flex-start;}
+        .user-actions{width:100%;justify-content:flex-start;margin-left:0;}
     }
     @media (max-width:760px){
         body{display:block;}
@@ -370,6 +422,8 @@ body{
         .hamburger{display:block;}
         .main{width:100%;height:auto;padding:90px 20px 40px 20px;}
         .shortener{margin-top:20px;}
+        .user-actions{justify-content:flex-start;}
+        .user-item{width:100%;}
     }
     .master-content{
         backdrop-filter: blur(5px);
@@ -561,31 +615,89 @@ body{
         </div>
 
 
-        
+        <div class="shortener user-manager-content" id="userManagerContent">
+            <div class="manager-controls">
+                <button class="toggle-add-btn" id="toggleAddBtn" type="button">Add account</button>
+                <button class="lock-manager-btn" id="lockManagerBtn" type="button">Lock manager</button>
+            </div>
+            <div class="card user-form-card" id="addUserCard" style="display:none;">
+                <h2>Create a new account</h2>
+                <form class="short-form" id="addUserForm">
+                    <div class="field-group">
+                        <label for="userName">Full name</label>
+                        <input class="input" type="text" id="userName" name="userName" placeholder="Alex Robotics" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="userDept">Department</label>
+                        <input class="input" type="text" id="userDept" name="userDept" placeholder="Mechanical" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="userEmail">Email address</label>
+                        <input class="input" type="email" id="userEmail" name="userEmail" placeholder="alex@giisclubs.org" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="userPassword">Temporary password</label>
+                        <input class="input" type="password" id="userPassword" name="userPassword" placeholder="Enter password" autocomplete="new-password" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="userPasswordConfirm">Confirm password</label>
+                        <input class="input" type="password" id="userPasswordConfirm" name="userPasswordConfirm" placeholder="Re-enter password" autocomplete="new-password" required>
+                    </div>
+                    <button class="submit-btn" type="submit">Create account</button>
+                </form>
+            </div>
+            <div class="list-card user-list-card">
+                <h3>Active accounts</h3>
+                <p class="empty-note" id="userEmptyState" style="display:none;">No accounts yet. Add your first member.</p>
+                <ul class="user-list" id="userList"></ul>
+            </div>
+        </div>
+
+
         <div class="toast" id="toast">Master key verification complete</div>
 
     </div>
     <script>
         function toggleMobileNav() {
             const mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.toggle('active');
+            if (mobileNav) {
+                mobileNav.classList.toggle('active');
+            }
         }
 
         function closeMobileNav() {
             const mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.remove('active');
+            if (mobileNav) {
+                mobileNav.classList.remove('active');
+            }
         }
 
         document.addEventListener('click', function(event) {
             const mobileNav = document.getElementById('mobileNav');
             const hamburger = document.querySelector('.hamburger');
 
-            if (!mobileNav.contains(event.target) &&
+            if (mobileNav &&
+                hamburger &&
+                !mobileNav.contains(event.target) &&
                 !hamburger.contains(event.target) &&
                 mobileNav.classList.contains('active')) {
                 closeMobileNav();
             }
         });
+
+        const masterKeyCard = document.getElementById('masterKeyCard');
+        const userManagerContent = document.getElementById('userManagerContent');
+        const toggleAddBtn = document.getElementById('toggleAddBtn');
+        const addUserCard = document.getElementById('addUserCard');
+        const addUserForm = document.getElementById('addUserForm');
+        const lockManagerBtn = document.getElementById('lockManagerBtn');
+        const userList = document.getElementById('userList');
+        const userEmptyState = document.getElementById('userEmptyState');
+        const masterKeyForm = document.getElementById('masterKeyForm');
+
+        let currentMasterKey = '';
+        let userCache = [];
+        let addFormVisible = false;
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
@@ -595,34 +707,34 @@ body{
 
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('.code-input');
-            
+
             inputs.forEach((input, index) => {
-                input.addEventListener('input', function(e) {
+                input.addEventListener('input', function() {
                     if (this.value.length === 4 && index < inputs.length - 1) {
                         inputs[index + 1].focus();
                     }
                 });
-                
+
                 input.addEventListener('keydown', function(e) {
                     if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
                         inputs[index - 1].focus();
                     }
-                    
+
                     if (!/[a-zA-Z0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
                         e.preventDefault();
                     }
                 });
-                
+
                 input.addEventListener('paste', function(e) {
                     e.preventDefault();
                     const paste = (e.clipboardData || window.clipboardData).getData('text');
                     const cleanPaste = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                    
+
                     for (let i = 0; i < inputs.length && i * 4 < cleanPaste.length; i++) {
                         const chunk = cleanPaste.substr(i * 4, 4);
                         inputs[i].value = chunk;
                     }
-                    
+
                     const nextEmpty = Array.from(inputs).find(inp => inp.value.length < 4);
                     if (nextEmpty) {
                         nextEmpty.focus();
@@ -631,56 +743,323 @@ body{
                     }
                 });
             });
-            
-            inputs[0].focus();
-        });
-        let currentMasterKey = '';
 
-        document.getElementById('masterKeyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+            if (inputs.length > 0) {
+                inputs[0].focus();
+            }
+        });
+
+        if (toggleAddBtn) {
+            toggleAddBtn.addEventListener('click', function() {
+                setAddFormVisibility(!addFormVisible);
+            });
+        }
+
+        if (lockManagerBtn) {
+            lockManagerBtn.addEventListener('click', function() {
+                lockManager();
+            });
+        }
+
+        if (addUserForm) {
+            addUserForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                if (!currentMasterKey) {
+                    showToast('Enter the master key first');
+                    return;
+                }
+
+                const nameInput = document.getElementById('userName');
+                const deptInput = document.getElementById('userDept');
+                const emailInput = document.getElementById('userEmail');
+                const passwordInput = document.getElementById('userPassword');
+                const passwordConfirmInput = document.getElementById('userPasswordConfirm');
+
+                const name = nameInput ? nameInput.value.trim() : '';
+                const dept = deptInput ? deptInput.value.trim() : '';
+                const email = emailInput ? emailInput.value.trim() : '';
+                const password = passwordInput ? passwordInput.value : '';
+                const confirmPassword = passwordConfirmInput ? passwordConfirmInput.value : '';
+
+                if (!name || !dept || !email || !password || !confirmPassword) {
+                    showToast('All fields are required');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showToast('Passwords do not match');
+                    return;
+                }
+
+                const submitBtn = addUserForm.querySelector('.submit-btn');
+                const originalText = submitBtn ? submitBtn.textContent : '';
+                if (submitBtn) {
+                    submitBtn.textContent = 'Creating...';
+                    submitBtn.disabled = true;
+                }
+
+                fetch('/users/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        masterKey: currentMasterKey,
+                        name: name,
+                        dept: dept,
+                        email: email,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message || 'Account created successfully');
+                        addUserForm.reset();
+                        setAddFormVisibility(false);
+                        refreshUsers();
+                    } else {
+                        showToast(data.message || 'Error creating account');
+                    }
+                })
+                .catch(() => {
+                    showToast('Error creating account');
+                })
+                .finally(() => {
+                    if (submitBtn) {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            });
+        }
+
+        if (masterKeyForm) {
+            masterKeyForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const inputs = document.querySelectorAll('.code-input');
+                const masterKey = Array.from(inputs).map(input => input.value).join('');
+
+                if (masterKey.length !== 20) {
+                    showToast('Please enter a complete 20-character master key');
+                    return;
+                }
+
+                const submitBtn = masterKeyForm.querySelector('.master-submit');
+                const originalText = submitBtn.value;
+                submitBtn.value = 'Verifying...';
+                submitBtn.disabled = true;
+
+                fetch('/master2users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ masterKey: masterKey })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentMasterKey = masterKey;
+                        if (masterKeyCard) {
+                            masterKeyCard.style.display = 'none';
+                        }
+                        if (userManagerContent) {
+                            userManagerContent.classList.add('active');
+                        }
+                        renderUserList(Array.isArray(data.users) ? data.users : []);
+                        showToast(data.message || 'Master key verified successfully!');
+                        if (userManagerContent) {
+                            userManagerContent.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    } else {
+                        showToast(data.message || 'Invalid master key');
+                    }
+                })
+                .catch(() => {
+                    showToast('Error connecting to server');
+                })
+                .finally(() => {
+                    submitBtn.value = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        }
+
+        function setAddFormVisibility(visible) {
+            addFormVisible = visible;
+            if (addUserCard) {
+                addUserCard.style.display = visible ? 'block' : 'none';
+            }
+            if (toggleAddBtn) {
+                toggleAddBtn.textContent = visible ? 'Hide form' : 'Add account';
+            }
+            if (visible) {
+                const nameInput = document.getElementById('userName');
+                if (nameInput) {
+                    nameInput.focus();
+                }
+            }
+        }
+
+        function lockManager() {
+            currentMasterKey = '';
+            userCache = [];
+            setAddFormVisibility(false);
+            renderUserList([]);
+            if (userManagerContent) {
+                userManagerContent.classList.remove('active');
+            }
+            if (masterKeyCard) {
+                masterKeyCard.style.display = 'flex';
+            }
             const inputs = document.querySelectorAll('.code-input');
-            const masterKey = Array.from(inputs).map(input => input.value).join('');
-            
-            if (masterKey.length !== 20) {
-                showToast('Please enter a complete 20-character master key');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            if (inputs.length > 0) {
+                inputs[0].focus();
+            }
+            showToast('User manager locked');
+        }
+
+        function renderUserList(users) {
+            if (!userList || !userEmptyState) {
                 return;
             }
 
-            const submitBtn = document.querySelector('.master-submit');
-            const originalText = submitBtn.value;
-            submitBtn.value = 'Verifying...';
-            submitBtn.disabled = true;
+            userCache = Array.isArray(users) ? users : [];
+            userList.innerHTML = '';
 
-            fetch('/master2pass', {
+            if (!userCache.length) {
+                userEmptyState.style.display = 'block';
+                return;
+            }
+
+            userEmptyState.style.display = 'none';
+
+            userCache.forEach(user => {
+                const item = document.createElement('li');
+                item.className = 'user-item';
+
+                const main = document.createElement('div');
+                main.className = 'user-main';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'user-name';
+                nameSpan.textContent = user.name || 'Unknown member';
+
+                const emailSpan = document.createElement('span');
+                emailSpan.className = 'user-email';
+                emailSpan.textContent = user.email || 'No email provided';
+
+                main.appendChild(nameSpan);
+                main.appendChild(emailSpan);
+
+                const meta = document.createElement('div');
+                meta.className = 'user-meta';
+
+                const deptBadge = document.createElement('span');
+                deptBadge.className = 'dept-badge';
+                deptBadge.textContent = user.dept ? user.dept : 'Unknown';
+
+                const idSpan = document.createElement('span');
+                idSpan.className = 'user-id';
+                idSpan.textContent = user.id ? `ID: ${user.id}` : 'ID unavailable';
+
+                meta.appendChild(deptBadge);
+                meta.appendChild(idSpan);
+
+                const actions = document.createElement('div');
+                actions.className = 'user-actions';
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', function() {
+                    const confirmed = window.confirm('Delete account for ' + (user.name || 'this member') + '?');
+                    if (confirmed) {
+                        deleteUser(user.id);
+                    }
+                });
+
+                actions.appendChild(deleteBtn);
+
+                item.appendChild(main);
+                item.appendChild(meta);
+                item.appendChild(actions);
+
+                userList.appendChild(item);
+            });
+        }
+
+        function deleteUser(userId) {
+            if (!currentMasterKey) {
+                showToast('Enter the master key first');
+                return;
+            }
+            if (!userId) {
+                showToast('Missing user identifier');
+                return;
+            }
+
+            fetch('/users/delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ masterKey: masterKey })
+                body: JSON.stringify({
+                    masterKey: currentMasterKey,
+                    id: userId
+                })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Master key verified successfully!');
+                    showToast(data.message || 'User deleted successfully');
+                    refreshUsers();
                 } else {
-                    showToast(data.message || 'Invalid master key');
+                    showToast(data.message || 'Error deleting user');
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Error connecting to server');
-            })
-            .finally(() => {
-                submitBtn.value = originalText;
-                submitBtn.disabled = false;
+            .catch(() => {
+                showToast('Error deleting user');
             });
-        });
+        }
 
+        function refreshUsers() {
+            if (!currentMasterKey) {
+                return;
+            }
 
+            fetch('/master2users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ masterKey: currentMasterKey })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    renderUserList(Array.isArray(data.users) ? data.users : []);
+                } else {
+                    showToast(data.message || 'Unable to refresh users');
+                }
+            })
+            .catch(() => {
+                showToast('Error refreshing users');
+            });
+        }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
+            if (!toast) {
+                return;
+            }
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => {

@@ -622,7 +622,7 @@ body{
     }
     .password-item{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:rgba(255,255,255,0.06);padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);position:relative;}
     .password-name{color:#c5c5d9;font-size:1.65vh;font-weight:600;max-width:25%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .password-url{color:#4caf50;font-size:1.65vh;max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .password-url{color:#4caf50;font-size:1.65vh;max-width:35%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none;display:inline-block;}
     .password-hidden{color:#ffeb3b;font-size:1.65vh;max-width:25%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .password-field{color:#ff9800;font-size:1.65vh;font-family:monospace;max-width:25%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .actions{margin-left:auto;display:flex;gap:8px;}
@@ -641,6 +641,44 @@ body{
     .empty-note{font-size:1.7vh;color:#bfbfe0;}
     .toast{position:fixed;bottom:26px;right:26px;background:linear-gradient(135deg,#6c63ff,#4a47a3);color:#fff;padding:14px 20px;border-radius:14px;font-size:1.6vh;font-family:'crest';box-shadow:0 10px 26px -6px rgba(0,0,0,0.55);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .35s ease, transform .35s ease;}
     .toast.show{opacity:1;transform:translateY(0);}
+    .password-manager-content{display:none;flex-direction:column;gap:30px;margin-top:30px;}
+    .password-manager-content.active{display:flex;}
+    .manager-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
+    .lock-manager-btn{
+        padding:12px 24px;
+        font-size:1.8vh;
+        font-family:'crest';
+        border-radius:12px;
+        border:0;
+        cursor:pointer;
+        background:linear-gradient(135deg,#f44336,#d32f2f);
+        color:#fff;
+        letter-spacing:0.8px;
+        transition:background .25s ease, transform .18s ease, box-shadow .25s ease;
+        box-shadow:0 8px 20px -6px rgba(244,67,54,0.55);
+    }
+    .lock-manager-btn:hover{background:linear-gradient(135deg,#e53935,#c62828);transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(244,67,54,0.6);}
+    .lock-manager-btn:active{transform:translateY(0);box-shadow:0 6px 16px -4px rgba(244,67,54,0.5);}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:1100;padding:20px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+    .modal.open{display:flex;}
+    .modal-content{width:min(500px,95vw);background:linear-gradient(135deg, rgba(35,35,55,0.92), rgba(25,18,40,0.92));border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:24px 28px;box-shadow:0 18px 40px -10px rgba(0,0,0,0.7);position:relative;}
+    .modal-content h3{margin:0 0 16px 0;font-size:clamp(1.5rem,3vw,2rem);}
+    .modal-form{display:flex;flex-direction:column;gap:16px;}
+    .modal-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:10px;}
+    .cancel-btn{
+        padding:14px 24px;
+        font-size:2vh;
+        font-family:'crest';
+        border-radius:999px;
+        border:1px solid rgba(255,255,255,0.25);
+        background:rgba(255,255,255,0.1);
+        color:#fff;
+        cursor:pointer;
+        transition:background .25s ease, transform .18s ease, box-shadow .25s ease;
+    }
+    .cancel-btn:hover{background:rgba(255,255,255,0.2);transform:translateY(-2px);box-shadow:0 12px 28px -8px rgba(255,255,255,0.35);}
+    .cancel-btn:active{transform:translateY(0);}
+    .actions button:disabled{opacity:0.6;cursor:not-allowed;}
   </style>
 </head>
 <body>
@@ -705,68 +743,153 @@ body{
         </div>
 
 
+        <div class="shortener password-manager-content" id="passwordManagerContent">
+            <div class="manager-controls">
+                <button class="toggle-add-btn" id="toggleAddBtn" type="button">Add password</button>
+                <button class="lock-manager-btn" id="lockManagerBtn" type="button">Lock manager</button>
+            </div>
+            <div class="add-password-card" id="addPasswordCard" style="display:none;">
+                <h2>Save a new password</h2>
+                <form class="short-form" id="addPasswordForm">
+                    <div class="field-group">
+                        <label for="passwordName">Account name</label>
+                        <input class="input" type="text" id="passwordName" name="passwordName" placeholder="Club Instagram" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="passwordUrl">Account URL</label>
+                        <input class="input" type="text" id="passwordUrl" name="passwordUrl" placeholder="https://instagram.com/giisrobotics" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="passwordValue">Password</label>
+                        <input class="input" type="text" id="passwordValue" name="passwordValue" placeholder="Enter password" required>
+                    </div>
+                    <button class="submit-btn" type="submit">Save password</button>
+                </form>
+            </div>
+            <div class="list-card">
+                <h3>Saved passwords</h3>
+                <p class="empty-note" id="passwordEmptyState" style="display:none;">No passwords saved yet.</p>
+                <ul class="url-list" id="passwordList"></ul>
+            </div>
+        </div>
+
+
         
         <div class="toast" id="toast">Password copied to clipboard ✓</div>
+
+        <div class="modal" id="editModal" aria-hidden="true">
+            <div class="modal-content">
+                <h3>Edit password</h3>
+                <form class="modal-form" id="editPasswordForm">
+                    <div class="field-group">
+                        <label for="editName">Account name</label>
+                        <input class="input" type="text" id="editName" name="editName" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="editUrl">Account URL</label>
+                        <input class="input" type="text" id="editUrl" name="editUrl" required>
+                    </div>
+                    <div class="field-group">
+                        <label for="editPassword">Password</label>
+                        <input class="input" type="text" id="editPassword" name="editPassword" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="cancel-btn" type="button" id="cancelEditBtn">Cancel</button>
+                        <button class="submit-btn" type="submit">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
     </div>
     <script>
         function toggleMobileNav() {
             const mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.toggle('active');
+            if (mobileNav) {
+                mobileNav.classList.toggle('active');
+            }
         }
 
         function closeMobileNav() {
             const mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.remove('active');
+            if (mobileNav) {
+                mobileNav.classList.remove('active');
+            }
         }
 
         document.addEventListener('click', function(event) {
             const mobileNav = document.getElementById('mobileNav');
             const hamburger = document.querySelector('.hamburger');
 
-            if (!mobileNav.contains(event.target) &&
+            if (mobileNav &&
+                hamburger &&
+                !mobileNav.contains(event.target) &&
                 !hamburger.contains(event.target) &&
                 mobileNav.classList.contains('active')) {
                 closeMobileNav();
             }
         });
 
+        const masterKeyCard = document.getElementById('masterKeyCard');
+        const passwordManagerContent = document.getElementById('passwordManagerContent');
+        const toggleAddBtn = document.getElementById('toggleAddBtn');
+        const addPasswordCard = document.getElementById('addPasswordCard');
+        const addPasswordForm = document.getElementById('addPasswordForm');
+        const passwordList = document.getElementById('passwordList');
+        const passwordEmptyState = document.getElementById('passwordEmptyState');
+        const lockManagerBtn = document.getElementById('lockManagerBtn');
+        const editModal = document.getElementById('editModal');
+        const editPasswordForm = document.getElementById('editPasswordForm');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const editNameInput = document.getElementById('editName');
+        const editUrlInput = document.getElementById('editUrl');
+        const editPasswordInput = document.getElementById('editPassword');
+        const masterKeyForm = document.getElementById('masterKeyForm');
+
+        let currentMasterKey = '';
+        let passwordCache = [];
+        let addFormVisible = false;
+        let editingOriginalName = '';
+
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeMobileNav();
+                if (editModal && editModal.classList.contains('open')) {
+                    closeEditModal();
+                }
             }
         });
 
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('.code-input');
-            
+
             inputs.forEach((input, index) => {
-                input.addEventListener('input', function(e) {
+                input.addEventListener('input', function() {
                     if (this.value.length === 4 && index < inputs.length - 1) {
                         inputs[index + 1].focus();
                     }
                 });
-                
+
                 input.addEventListener('keydown', function(e) {
                     if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
                         inputs[index - 1].focus();
                     }
-                    
+
                     if (!/[a-zA-Z0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
                         e.preventDefault();
                     }
                 });
-                
+
                 input.addEventListener('paste', function(e) {
                     e.preventDefault();
                     const paste = (e.clipboardData || window.clipboardData).getData('text');
                     const cleanPaste = paste.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-                    
+
                     for (let i = 0; i < inputs.length && i * 4 < cleanPaste.length; i++) {
                         const chunk = cleanPaste.substr(i * 4, 4);
                         inputs[i].value = chunk;
                     }
-                    
+
                     const nextEmpty = Array.from(inputs).find(inp => inp.value.length < 4);
                     if (nextEmpty) {
                         nextEmpty.focus();
@@ -775,54 +898,466 @@ body{
                     }
                 });
             });
-            
-            inputs[0].focus();
-        });
-        let currentMasterKey = '';
 
-        document.getElementById('masterKeyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const inputs = document.querySelectorAll('.code-input');
-            const masterKey = Array.from(inputs).map(input => input.value).join('');
-            
-            if (masterKey.length !== 20) {
-                showToast('Please enter a complete 20-character master key');
+            if (inputs.length > 0) {
+                inputs[0].focus();
+            }
+        });
+
+        if (toggleAddBtn && addPasswordCard) {
+            toggleAddBtn.addEventListener('click', function() {
+                addFormVisible = !addFormVisible;
+                addPasswordCard.style.display = addFormVisible ? 'block' : 'none';
+                toggleAddBtn.textContent = addFormVisible ? 'Hide add form' : 'Add password';
+                if (addFormVisible) {
+                    const nameInput = document.getElementById('passwordName');
+                    if (nameInput) {
+                        nameInput.focus();
+                    }
+                }
+            });
+        }
+
+        if (lockManagerBtn) {
+            lockManagerBtn.addEventListener('click', function() {
+                currentMasterKey = '';
+                passwordCache = [];
+                addFormVisible = false;
+                if (addPasswordCard) {
+                    addPasswordCard.style.display = 'none';
+                }
+                if (toggleAddBtn) {
+                    toggleAddBtn.textContent = 'Add password';
+                }
+                if (passwordManagerContent) {
+                    passwordManagerContent.classList.remove('active');
+                }
+                if (masterKeyCard) {
+                    masterKeyCard.style.display = 'flex';
+                }
+                renderPasswordList([]);
+                showToast('Password manager locked');
+            });
+        }
+
+        if (addPasswordForm) {
+            addPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentMasterKey) {
+                    showToast('Enter the master key first');
+                    return;
+                }
+
+                const nameInput = document.getElementById('passwordName');
+                const urlInput = document.getElementById('passwordUrl');
+                const passwordInput = document.getElementById('passwordValue');
+
+                const name = nameInput ? nameInput.value.trim() : '';
+                const url = urlInput ? urlInput.value.trim() : '';
+                const password = passwordInput ? passwordInput.value.trim() : '';
+
+                if (!name || !url || !password) {
+                    showToast('All fields are required');
+                    return;
+                }
+
+                fetch('/addpassword', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        masterKey: currentMasterKey,
+                        name: name,
+                        url: url,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message || 'Password saved successfully');
+                        addPasswordForm.reset();
+                        addFormVisible = false;
+                        addPasswordCard.style.display = 'none';
+                        if (toggleAddBtn) {
+                            toggleAddBtn.textContent = 'Add password';
+                        }
+                        refreshPasswords();
+                    } else {
+                        showToast(data.message || 'Error saving password');
+                    }
+                })
+                .catch(() => {
+                    showToast('Error saving password');
+                });
+            });
+        }
+
+        if (editPasswordForm) {
+            editPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentMasterKey) {
+                    showToast('Enter the master key first');
+                    return;
+                }
+
+                const name = editNameInput ? editNameInput.value.trim() : '';
+                const url = editUrlInput ? editUrlInput.value.trim() : '';
+                const password = editPasswordInput ? editPasswordInput.value.trim() : '';
+
+                if (!name || !url || !password || !editingOriginalName) {
+                    showToast('All fields are required');
+                    return;
+                }
+
+                fetch('/editpassword', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        masterKey: currentMasterKey,
+                        originalName: editingOriginalName,
+                        name: name,
+                        url: url,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message || 'Password updated successfully');
+                        closeEditModal();
+                        refreshPasswords();
+                    } else {
+                        showToast(data.message || 'Error updating password');
+                    }
+                })
+                .catch(() => {
+                    showToast('Error updating password');
+                });
+            });
+        }
+
+        if (cancelEditBtn) {
+            cancelEditBtn.addEventListener('click', function() {
+                closeEditModal();
+            });
+        }
+
+        if (editModal) {
+            editModal.addEventListener('click', function(event) {
+                if (event.target === editModal) {
+                    closeEditModal();
+                }
+            });
+        }
+
+        if (masterKeyForm) {
+            masterKeyForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const inputs = document.querySelectorAll('.code-input');
+                const masterKey = Array.from(inputs).map(input => input.value).join('');
+
+                if (masterKey.length !== 20) {
+                    showToast('Please enter a complete 20-character master key');
+                    return;
+                }
+
+                const submitBtn = masterKeyForm.querySelector('.master-submit');
+                const originalText = submitBtn.value;
+                submitBtn.value = 'Verifying...';
+                submitBtn.disabled = true;
+
+                fetch('/master2pass', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ masterKey: masterKey })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentMasterKey = masterKey;
+                        if (masterKeyCard) {
+                            masterKeyCard.style.display = 'none';
+                        }
+                        if (passwordManagerContent) {
+                            passwordManagerContent.classList.add('active');
+                        }
+                        renderPasswordList(Array.isArray(data.passwords) ? data.passwords : []);
+                        showToast(data.message || 'Master key verified successfully!');
+                        if (passwordManagerContent) {
+                            passwordManagerContent.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    } else {
+                        currentMasterKey = '';
+                        showToast(data.message || 'Invalid master key');
+                    }
+                })
+                .catch(() => {
+                    showToast('Error connecting to server');
+                })
+                .finally(() => {
+                    submitBtn.value = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        }
+
+        function renderPasswordList(passwords) {
+            if (!passwordList || !passwordEmptyState) {
                 return;
             }
 
-            const submitBtn = document.querySelector('.master-submit');
-            const originalText = submitBtn.value;
-            submitBtn.value = 'Verifying...';
-            submitBtn.disabled = true;
+            passwordCache = Array.isArray(passwords) ? passwords : [];
+            passwordList.innerHTML = '';
 
+            if (!passwordCache.length) {
+                passwordEmptyState.style.display = 'block';
+                return;
+            }
+
+            passwordEmptyState.style.display = 'none';
+
+            passwordCache.forEach(entry => {
+                const item = document.createElement('li');
+                item.className = 'password-item';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'password-name';
+                nameSpan.textContent = entry.name || 'Untitled';
+
+                const urlLink = document.createElement(entry.url ? 'a' : 'span');
+                urlLink.className = 'password-url';
+                const displayUrl = entry.url || 'No link provided';
+                urlLink.textContent = displayUrl;
+                const normalizedUrl = normalizeUrl(entry.url);
+                if (entry.url && urlLink.tagName === 'A') {
+                    urlLink.href = normalizedUrl;
+                    urlLink.target = '_blank';
+                    urlLink.rel = 'noopener';
+                }
+
+                const hiddenSpan = document.createElement('span');
+                hiddenSpan.className = 'password-hidden';
+                const maskLength = entry.password ? Math.min(entry.password.length, 12) : 4;
+                hiddenSpan.textContent = '*'.repeat(maskLength) || '****';
+
+                const passwordSpan = document.createElement('span');
+                passwordSpan.className = 'password-field';
+                passwordSpan.textContent = entry.password || '';
+                passwordSpan.style.display = 'none';
+
+                const actions = document.createElement('div');
+                actions.className = 'actions';
+
+                const showBtn = document.createElement('button');
+                showBtn.type = 'button';
+                showBtn.className = 'show-password-btn';
+                showBtn.textContent = 'Show';
+                showBtn.dataset.visible = 'false';
+                showBtn.addEventListener('click', function() {
+                    togglePasswordVisibility(hiddenSpan, passwordSpan, showBtn);
+                });
+
+                const copyBtn = document.createElement('button');
+                copyBtn.type = 'button';
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copy';
+                copyBtn.addEventListener('click', function() {
+                    copyPassword(entry.password || '');
+                });
+
+                const openBtn = document.createElement('button');
+                openBtn.type = 'button';
+                openBtn.className = 'open-btn';
+                openBtn.textContent = 'Visit';
+                if (entry.url && normalizedUrl) {
+                    openBtn.addEventListener('click', function() {
+                        window.open(normalizedUrl, '_blank');
+                    });
+                } else {
+                    openBtn.disabled = true;
+                }
+
+                const editBtn = document.createElement('button');
+                editBtn.type = 'button';
+                editBtn.className = 'edit-btn';
+                editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', function() {
+                    openEditModal(entry);
+                });
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.type = 'button';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', function() {
+                    const confirmed = window.confirm('Delete password for ' + (entry.name || 'this account') + '?');
+                    if (confirmed) {
+                        deletePassword(entry.name);
+                    }
+                });
+
+                actions.appendChild(showBtn);
+                actions.appendChild(copyBtn);
+                actions.appendChild(openBtn);
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+
+                item.appendChild(nameSpan);
+                item.appendChild(urlLink);
+                item.appendChild(hiddenSpan);
+                item.appendChild(passwordSpan);
+                item.appendChild(actions);
+
+                passwordList.appendChild(item);
+            });
+        }
+
+        function togglePasswordVisibility(hiddenEl, valueEl, button) {
+            if (!hiddenEl || !valueEl || !button) {
+                return;
+            }
+            const isVisible = button.dataset.visible === 'true';
+            if (isVisible) {
+                valueEl.style.display = 'none';
+                hiddenEl.style.display = 'inline';
+                button.textContent = 'Show';
+                button.dataset.visible = 'false';
+            } else {
+                valueEl.style.display = 'inline';
+                hiddenEl.style.display = 'none';
+                button.textContent = 'Hide';
+                button.dataset.visible = 'true';
+            }
+        }
+
+        function copyPassword(value) {
+            if (!value) {
+                showToast('No password to copy');
+                return;
+            }
+            if (!navigator.clipboard) {
+                showToast('Clipboard not available');
+                return;
+            }
+            navigator.clipboard.writeText(value)
+                .then(function() {
+                    showToast('Password copied to clipboard ✓');
+                })
+                .catch(function() {
+                    showToast('Unable to copy password');
+                });
+        }
+
+        function refreshPasswords() {
+            if (!currentMasterKey) {
+                return;
+            }
             fetch('/master2pass', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ masterKey: masterKey })
+                body: JSON.stringify({ masterKey: currentMasterKey })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.passwords)) {
+                    renderPasswordList(data.passwords);
+                } else {
+                    showToast(data.message || 'Unable to refresh passwords');
+                }
+            })
+            .catch(() => {
+                showToast('Error refreshing passwords');
+            });
+        }
+
+        function openEditModal(entry) {
+            if (!editModal || !editPasswordForm) {
+                return;
+            }
+            editingOriginalName = entry.name;
+            if (editNameInput) {
+                editNameInput.value = entry.name || '';
+            }
+            if (editUrlInput) {
+                editUrlInput.value = entry.url || '';
+            }
+            if (editPasswordInput) {
+                editPasswordInput.value = entry.password || '';
+            }
+            editModal.classList.add('open');
+            editModal.setAttribute('aria-hidden', 'false');
+            if (editNameInput) {
+                editNameInput.focus();
+            }
+        }
+
+        function closeEditModal() {
+            if (!editModal) {
+                return;
+            }
+            editModal.classList.remove('open');
+            editModal.setAttribute('aria-hidden', 'true');
+            editingOriginalName = '';
+            if (editPasswordForm) {
+                editPasswordForm.reset();
+            }
+        }
+
+        function deletePassword(name) {
+            if (!currentMasterKey) {
+                showToast('Enter the master key first');
+                return;
+            }
+            if (!name) {
+                showToast('Missing account name');
+                return;
+            }
+            fetch('/deletepassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ masterKey: currentMasterKey, name: name })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Master key verified successfully!');
+                    showToast(data.message || 'Password deleted successfully');
+                    refreshPasswords();
                 } else {
-                    showToast(data.message || 'Invalid master key');
+                    showToast(data.message || 'Error deleting password');
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                showToast('Error connecting to server');
-            })
-            .finally(() => {
-                submitBtn.value = originalText;
-                submitBtn.disabled = false;
+            .catch(() => {
+                showToast('Error deleting password');
             });
-        });
+        }
+
+        function normalizeUrl(url) {
+            if (!url) {
+                return '';
+            }
+            const trimmed = url.trim();
+            if (/^https?:\/\//i.test(trimmed)) {
+                return trimmed;
+            }
+            return 'https://' + trimmed;
+        }
 
         function showToast(message) {
             const toast = document.getElementById('toast');
+            if (!toast) {
+                return;
+            }
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => {
