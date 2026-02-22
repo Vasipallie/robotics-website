@@ -4,20 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIIS Robotics Club</title>
+    <link rel="icon" type="image/x-icon" href="resources/favicon.ico">
     <style>
         @font-face {
             font-family: 'crest';
             src: url('/crst.otf') format('opentype');
         }
+        @font-face {
+            font-family: 'crestb';
+            src: url('/crstb.otf') format('opentype');
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         html, body{
             width: 100%;
             height: 100%;
             margin: 0;
-            background-color: #000004;
+            background-color: #111111;
             color: #ffffff;
             font-family: 'crest';
-            box-sizing: border-box;
-            overflow-x: auto;
+            background-image: url('/logo/background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow-x: hidden;
         }
         
         *, *::before, *::after {
@@ -44,17 +57,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px clamp(20px, 5vw, 50px);
+            padding: 15px clamp(20px, 5vw, 50px);
             position: fixed;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: linear-gradient(to right, rgba(33, 24, 43, 0.95), rgba(10, 10, 34, 0.92));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: linear-gradient(180deg, rgba(20, 33, 61, 0.8) 51%, rgba(30, 30, 47, 0.8) 100%);
             border-radius: 0 0 20px 20px;
             min-height: 72px;
             width: 100%;
             box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
         
@@ -191,27 +205,177 @@
         
         .main-content {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
             background-image: url('/logo/optix.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             position: relative;
+            padding: 100px 0 0;
+        }
+        
+        .content-glass-container {
+            margin: 40px clamp(20px, 5vw, 80px) 80px;
+            background: linear-gradient(135deg, rgba(35,35,55,0.4), rgba(25,18,40,0.4));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 8px 16px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .content-glass-container::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 85% 15%, rgba(108,99,255,0.08), transparent 60%);
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .content-glass-container > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px clamp(20px, 5vw, 50px) 60px;
+            position: relative;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
             width: 100%;
-            padding: 72px clamp(20px, 5vw, 50px) 0;
+            align-items: center;
         }
         
-        .center-logo {
-            text-align: center;
-            margin-bottom: 30px;
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            z-index: 2;
         }
         
-        .center-logo img {
-            max-width: 200px;
-            height: auto;
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-family: 'crestb';
+            line-height: 1.1;
+            margin: 0;
+            color: #ffffff;
+            letter-spacing: 2px;
         }
+        
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            color: #ffffff;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .hero-description {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.6;
+            margin: 0;
+            background: rgba(0,0,0,0.3);
+            padding: 16px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 28px;
+            background: linear-gradient(180deg, rgba(82,108,218,1) 0%, rgba(44,75,205,1) 24%, rgba(82,108,218,1) 71%, rgba(82,108,218,1) 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'crest';
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 24px -6px rgba(66,84,214,0.35);
+            border: 2px solid transparent;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(180deg, rgba(98,122,230,1) 0%, rgba(54,85,215,1) 24%, rgba(98,122,230,1) 71%, rgba(98,122,230,1) 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px -8px rgba(66,84,214,0.4);
+        }
+        
+        .btn-secondary {
+            display: inline-block;
+            padding: 14px 28px;
+            background: transparent;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'crest';
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .hero-card {
+            width: 100%;
+            padding: 32px 28px;
+            background: linear-gradient(135deg, rgba(35,35,55,0.75), rgba(25,18,40,0.75));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 8px 16px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+            transition: transform .28s ease, box-shadow .28s ease;
+        }
+        
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 85% 15%, rgba(108,99,255,0.15), transparent 60%);
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .hero-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 35px 70px -15px rgba(0,0,0,0.7);
+        }
+        
+
         
         ::-webkit-scrollbar {
             width: 12px;
@@ -268,107 +432,67 @@
             font-size: 14px;
             border-top: 1px solid #444;
         }
+        /* modern card style aligned with dashboard/login */
         .info{
-            width: clamp(350px, 22vw, 400px);
-            height: 60vh;
-            padding: 40px 30px;
-            padding-top: 12vh;
-            clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 18%);
-            background: linear-gradient(-135deg, #00309fb8, #680a368d);
-            backdrop-filter: blur(15px);
-            font-size: x-large;
-            box-shadow: 
-                0 20px 40px rgba(108, 99, 255, 0.3),
-                0 8px 16px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: clamp(360px, 32vw, 480px);
+            padding: 32px 28px;
+            background: linear-gradient(135deg, rgba(35,35,55,0.75), rgba(25,18,40,0.75));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6), 0 8px 16px rgba(0,0,0,0.4);
+            color: #fff;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: transform .28s ease, box-shadow .28s ease;
         }
         
         .info::before {
-            content: '';
+            content: "";
             position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.1), 
-                transparent);
-            transition: left 0.5s ease;
+            inset: 0;
+            background: radial-gradient(circle at 85% 15%, rgba(108,99,255,0.15), transparent 60%);
+            pointer-events: none;
+            opacity: 0.8;
         }
         
-        .info:hover::before {
-            left: 100%;
-        }
-        
-        .info:hover {
-            transform: translateY(-5px);
-            box-shadow: 
-                0 25px 50px rgba(108, 99, 255, 0.4),
-                0 12px 24px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .info h2 {
-            margin: 0 0 30px 0;
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            line-height: 1.2;
-            font-weight: bold;
-            text-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(108, 99, 255, 0.5);
-            background: linear-gradient(45deg, #ffffff, #e0e0ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-        
-        .info button {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-family: 'crest';
-            cursor: pointer;
-            transition: all 0.25s ease;
-            backdrop-filter: blur(10px);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
+        .info > * {
             position: relative;
-            overflow: hidden;
+            z-index: 1;
         }
-        
-        .info button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.3s ease;
+
+        .info:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 60px -12px rgba(0,0,0,0.6);
         }
-        
-        .info button:hover::before {
-            left: 100%;
+
+        .info h2 {
+            margin: 0 0 18px 0;
+            font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+            line-height: 1.15;
+            letter-spacing: 0.6px;
+            color: #fff;
         }
-        
-        .info button:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+        .info .subtitle { color: rgba(255,255,255,0.78); display:block; margin-bottom: 18px; }
+
+        .btna {
+            display: inline-block;
+            padding: 12px 22px;
+            font-family: 'crest';
+            border-radius: 12px;
+            border: 0;
+            cursor: pointer;
+            background: linear-gradient(180deg, rgba(82,108,218,1) 0%, rgba(44,75,205,1) 24% , rgba(82,108,218,1) 100%);
+            color: #fff;
+            box-shadow: 0 10px 24px -6px rgba(66,84,214,0.25);
+            transition: transform .18s ease, box-shadow .25s ease;
+            text-transform: none;
+            font-weight: 700;
         }
-        
-        .info button:active {
-            transform: translateY(0);
-        }
+
+        .btna:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -10px rgba(66,84,214,0.35); }
         .subtitle {
             font-size: 1.2rem;
             color: #e0e0ff;
@@ -389,56 +513,49 @@
                 display: none;
             }
             
-            .main-content {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+            
+
+            
+            .hero-actions {
                 justify-content: center;
-                padding: 80px 20px 20px;
             }
             
-            .info {
-                width: 90%;
-                max-width: 400px;
-                height: auto;
-                min-height: 50vh;
-                padding: 30px 25px;
-                clip-path: none;
-                border-radius: 20px;
-            }
-            
-            .info h2 {
-                font-size: clamp(2rem, 8vw, 3rem);
-                text-align: center;
-            }
-            
-            .subtitle {
-                font-size: 1rem;
-                text-align: center;
-            }
-            
-            .info button {
-                width: 100%;
-                padding: 15px 25px;
-                font-size: 18px;
+            .btn-primary, .btn-secondary {
+                padding: 12px 24px;
+                font-size: 14px;
             }
         }
         
         @media (max-width: 480px) {
-            nav {
-                padding: 12px 15px;
-                min-height: 60px;
+            .content-glass-container {
+                margin: 20px 15px 40px;
+                min-height: calc(100vh - 140px);
             }
             
-            .main-content {
-                padding: 70px 15px 15px;
+            .hero-section {
+                padding: 30px 20px 40px;
             }
             
-            .info {
-                width: 95%;
-                padding: 25px 20px;
-                min-height: 45vh;
+            .features-section {
+                padding: 50px 15px;
             }
             
-            .info h2 {
-                font-size: clamp(1.8rem, 7vw, 2.5rem);
+
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+                max-width: 280px;
             }
             
             footer {
@@ -449,13 +566,12 @@
     </style>
 </head>
 <body>
-    <button class="hamburger" onclick="toggleMobileNav()" aria-label="Toggle navigation">☰</button>
-
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="about">About</a></li>
             <li><a href="contact">Contact Us</a></li>
+            <li><a href="https://blueprint.giisrobotics.club" target="_blank">Our Event</a></li>
         </ul>
         <logo>
             <a href="/" ><img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="60" height="60"></a>
@@ -463,62 +579,75 @@
         <a href="/login">Login</a>
     </nav>
 
-    <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Primary navigation">
-        <div class="mobile-nav-inner">
-            <img class="mobile-nav-logo" src="/logo/logo-white.png" alt="GIIS Robotics Club Logo">
-            <hr class="mobile-nav-divider">
-            <span class="mobile-nav-label">Explore</span>
-            <div class="mobile-nav-links">
-                <a class="mobile-nav-link active" href="/" onclick="closeMobileNav()">Home</a>
-                <a class="mobile-nav-link" href="/about" onclick="closeMobileNav()">About</a>
-                <a class="mobile-nav-link" href="/contact" onclick="closeMobileNav()">Contact Us</a>
-            </div>
-            <span class="mobile-nav-label">Account</span>
-            <div class="mobile-nav-links">
-                <a class="mobile-nav-link" href="/login" onclick="closeMobileNav()">Login</a>
-            </div>
-        </div>
-    </div>
     <div class="main-content">
-        <div class="header">
-             <div class="info">
-                <h2>GIIS<br>Robotics<br>Club<br><span style="font-size: 0.8em; opacity: 0.9;"><%= new Date().getFullYear() %> - <%= new Date().getFullYear() + 1 %></span></h2>
-                 <span class="subtitle">Build. Break. Obsess. Repeat.</span>
-                <button onclick="window.location.href='/about'">Meet the Team</button>
-             </div>
-        </div>        
+        <div class="content-glass-container">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">GIIS Robotics Club</h1>
+                        <h2 class="hero-subtitle">Build. Break. Obsess. Repeat.</h2>
+                        <p class="hero-description">
+                            Where innovation meets engineering. Join Singapore's premier high school robotics community 
+                            and transform your ideas into reality through cutting-edge technology and collaborative problem-solving.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="/about" class="btn-primary">Meet the Team</a>
+                            <a href="/contact" class="btn-secondary">Get Involved</a>
+                        </div>
+                    </div>
+                    <div class="hero-card">
+                        <div style="text-align: center; padding: 20px;">
+                            <img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="120" height="120" style="margin-bottom: 20px;">
+                            <h3 style="margin: 0 0 12px 0; font-size: 1.8rem; font-family: 'crestb';">Academic Year</h3>
+                            <p style="margin: 0; font-size: 2.2rem; color: #6c63ff; font-weight: 700;"><%= new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1 %> - <%= new Date().getMonth() >= 3 ? new Date().getFullYear() + 1 : new Date().getFullYear() %></p>
+                            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                                <p style="margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                                    Empowering the next generation of innovators through robotics, engineering, and technology.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div> 
     <footer>
-        Developed by Vasipalli Eshan Aditya | Maintained by GIIS Robotics Club &copy; <%= new Date().getFullYear() %> - <%= new Date().getFullYear() + 1 %>
+        Developed by Vasipalli Eshan Aditya | Maintained by GIIS Robotics Club &copy; <%= new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1 %> - <%= new Date().getMonth() >= 3 ? new Date().getFullYear() + 1 : new Date().getFullYear() %>
     </footer>
     
     <script>
-        function toggleMobileNav() {
-            const mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.toggle('active');
-        }
-        
-        function closeMobileNav() {
-            const mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.remove('active');
-        }
-        
-        // Close mobile nav when clicking outside
-        document.addEventListener('click', function(event) {
-            const mobileNav = document.getElementById('mobileNav');
-            const hamburger = document.querySelector('.hamburger');
-            
-            if (!mobileNav.contains(event.target) && 
-                !hamburger.contains(event.target) && 
-                mobileNav.classList.contains('active')) {
-                closeMobileNav();
-            }
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
         });
-        
-        // Handle escape key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeMobileNav();
+
+        // Add loading animation when navigating to other pages
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.href !== window.location.href) {
+                    this.style.opacity = '0.7';
+                }
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero-section');
+            if (parallax) {
+                const speed = scrolled * 0.5;
+                parallax.style.transform = `translateY(${speed}px)`;
             }
         });
     </script>

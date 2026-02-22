@@ -198,7 +198,7 @@
     </style>
 </head>
 <body> 
-    <nav onclick="window.location.href='/'"> <img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="30" height="30"> <span class="id">GIIS Robotics Club | <%= new Date().getFullYear() %> - <%= new Date().getFullYear() + 1 %></span></nav>
+    <nav onclick="window.location.href='/'"> <img src="/logo/logo-white.png" alt="GIIS Robotics Club Logo" width="30" height="30"> <span class="id">GIIS Robotics Club | <%= new Date().getMonth() >= 3 ? new Date().getFullYear() : new Date().getFullYear() - 1 %> - <%= new Date().getMonth() >= 3 ? new Date().getFullYear() + 1 : new Date().getFullYear() %></span></nav>
      
     <div class="main-content">
         <img src="logo/logo-white.png" alt="GIIS Robotics Club Logo" width="80" height="80">
